@@ -1,0 +1,11 @@
+*.pyc
+.DS_Store
+NOTES
+Thumbs.db
+bin
+daemon.pid
+include
+lib
+local
+logs
+.Python

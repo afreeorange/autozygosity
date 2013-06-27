@@ -1,0 +1,9 @@
+autozygosity
+############
+
+
+
+LICENSE
+-------
+See `LICENSE`
+

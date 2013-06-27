@@ -1,0 +1,2 @@
+from autozygosity import app
+

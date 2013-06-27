@@ -1,0 +1,6 @@
+HOST="127.0.0.1"
+PORT=5000
+DEBUG = True
+
+SECRET_KEY = "8MfeRORkN74/dsXMW/78BeLOu1yquSw7"
+MONGODB_SETTINGS = {'DB': "autozygosity", 'PORT': 27017}
