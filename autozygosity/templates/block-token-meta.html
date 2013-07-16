@@ -1,0 +1,11 @@
+<p class="pagination-centered">
+	<code>From {{ submission.ip_address }}</code> 
+	<span class="label {{ submission.status|jinja_filter_status_class }}">{{ submission.status }}</span>
+	<span class="token-timestamps">Submitted {{ submission.submitted|jinja_filter_human_timestamp }}</span>
+	{% if submission.started %}
+	<span class="token-timestamps">Started {{ submission.started|jinja_filter_human_timestamp }}</span>
+	{% endif %}
+	{% if submission.finished %}
+	<span class="token-timestamps">Finished {{ submission.finished|jinja_filter_human_timestamp }}</span>
+	{% endif %}
+</p>

@@ -1,15 +1,101 @@
 {% extends "base.html" %}
-{% block title %} Home {% endblock %}
 
 {% block content %}
 
-    Ola!
+<p>Nulla consectetur mattis est non tristique. Integer pretium convallis libero, ut porttitor massa iaculis quis. Aliquam posuere, turpis eu suscipit blandit, diam justo hendrerit mi, a consequat risus est id lacus. Etiam posuere commodo metus, vitae tempus enim. Quisque non urna in erat aliquet accumsan.</p>
+
+{% include "form-vcf.html" %}
+
+<hr />
+
+{% include "form-token.html" %}
 
 {% endblock %}
 
 {% block javascript %}
-$(document).ready(function() {
 
-});
+// function showProgress(evt) {
+//     if (evt.lengthComputable) {
+//         var percentComplete = (evt.loaded / evt.total) * 100;
+//         $('#progress').progressbar("option", "value", percentComplete );
+//     }  
+// }
+
+
+// function upload(){
+//     var fileIn = $("#vcf")[0];
+//     //Has any file been selected yet?
+//     if (fileIn.files === undefined || fileIn.files.length == 0) {
+//         console.log("Please select a file");
+//         return;
+//     }
+
+//     //We will upload only one file in this demo
+//     var file = fileIn.files[0];
+//     //Show the progress bar
+//     $("#progress").show();
+
+//     $.ajax({
+//         url: "/",
+//         type: "POST",
+//         data: file,
+//         processData: false, //Work around #1
+//         contentType: file.type, //Work around #2
+//         success: function(){
+//             $("#progress").hide();
+//         },
+//         error: function(){console.log("Failed");},
+//         //Work around #3
+//         xhr: function() {
+//             myXhr = $.ajaxSettings.xhr();
+//             if(myXhr.upload){
+//                 myXhr.upload.addEventListener('progress',showProgress, false);
+//             } else {
+//                 console.log("Upload progress is not supported.");
+//             }
+//             return myXhr;
+//         }
+//     });
+// }
+
+
+// $(function () {
+
+//     $("#progress").progressbar();
+//     $("#progress").hide();
+//     $("#submit").click(upload);
+
+// 	// var bar = $('.bar');
+// 	// var percent = $('.percent');
+// 	// var status = $('#status');
+// 	// var visual = $('#visual');
+
+// 	// percent.html('0%');
+// 	// console.log('Hello');
+
+// 	// // attach handler to form's submit event 
+// 	// $('#vcfupload').ajaxForm({
+// 	// 	beforeSend: function() {
+// 	// 		console.log('Before submit');
+// 	// 		status.empty();
+// 	// 		var percentVal = '0%';
+// 	// 		bar.width(percentVal)
+// 	// 		percent.html(percentVal);
+// 	// 		visual.slideDown();
+// 	// 	},
+// 	// 	uploadProgress: function(event, position, total, percentComplete) {
+// 	// 		var percentVal = percentComplete + '%';
+// 	// 		bar.width(percentVal);
+// 	// 		percent.html(percentVal);
+// 	// 		console.log(percentVal);
+// 	// 	}
+// 	// 	// complete: function(xhr) {
+// 	// 	// 	console.log('Done submitting');
+// 	// 	// 	status.html(xhr.responseText);
+// 	// 	// 	visual.slideUp();
+// 	// 	// }
+// 	// });
+
+// });
 {% endblock %}
 

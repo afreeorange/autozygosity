@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="uploaded">
+	<div class="alert">
+		<h2>{{ token }}</h2>
+	</div>
+	<p>That&#8217;s your upload token. <strong>You should write it down</strong>. Processing should take about 20 minutes. You can either keep this page open or <a href="/token/{{ token }}" title="Check your submission status">check the status of your submission</a> at any time. </p>
+</div>
+
+{% endblock %}

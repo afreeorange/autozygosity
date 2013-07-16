@@ -1,0 +1,48 @@
+<div class="pagination-centered">
+	<h1 class="happy-face">:)</h1>
+	<h2>Your results are ready.</h2>
+	<p>
+		Exciting! Download them below.
+		<br />
+		<small>Please note that these will be available for just 10 days</small>
+	</p>
+
+	<div class="row">
+		<div class="span3 offset3">
+			<a href="/static/sample.vcf" id="download-input"><span>Download your original VCF input file</span></a>
+		</div>
+		<div class="span3">
+			<a href="/static/sample.vcf" id="download-results"><span>Download a zip archive of your results</span></a>
+		</div>
+	</div>
+</div>
+
+<hr />
+
+<div class="pagination-centered">
+	<h3>BED file output</h3>
+	<p>Just a preview. This is included in the zip file above.</p>
+</div>
+
+<table class="table table-bordered table-condensed bed-results">
+	<thead>
+		<tr>
+			<th>Chromosome</th>
+			<th class="align-right">Start</th>
+			<th class="align-right">End</th>
+			<th class="align-right">kB Hom</th>
+			<th class="align-right">SNP Hom</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for record in bed_data %}
+		<tr>
+			<td>{{ record[0] }}</td>
+			<td class="align-right">{{ record[1]|jinja_filter_add_number_commas }}</td>
+			<td class="align-right">{{ record[1]|jinja_filter_add_number_commas }}</td>
+			<td class="align-right">{{ record[2]|jinja_filter_add_number_commas }}</td>
+			<td class="align-right">{{ record[3]|jinja_filter_add_number_commas }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>

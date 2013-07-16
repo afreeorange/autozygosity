@@ -9,3 +9,4 @@ lib
 local
 logs
 .Python
+uploads/*

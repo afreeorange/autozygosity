@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{% if submission %}
+
+		<div class="uploaded">
+			<div class="alert">
+				<h1>{{ submission.token }}</h1>
+			</div>
+		</div>
+
+		{% if submission.status == 'submitted' %}
+			{% include "block-token-queued.html" %}
+
+		{% elif submission.status == 'completed' %}
+			{% include "block-token-completed.html" %}
+
+		{% else %}
+			{% include "block-token-failed.html" %}
+
+		{% endif %}
+
+		<hr />
+
+		{% include "block-token-meta.html" %}
+
+	{% else %}
+		
+		{% include "error-token.html" %}
+
+	{% endif %}
+	
+{% endblock %}
