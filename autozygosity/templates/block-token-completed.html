@@ -9,16 +9,17 @@
 
 	<div class="row">
 		<div class="span3 offset3">
-			<a href="/static/sample.vcf" id="download-input"><span>Download your original VCF input file</span></a>
+			<a href="/download/{{ submission.token }}/input" id="download-input"><span>Download your original VCF input file</span></a>
 		</div>
 		<div class="span3">
-			<a href="/static/sample.vcf" id="download-results"><span>Download a zip archive of your results</span></a>
+			<a href="/download/{{ submission.token }}/output" id="download-results"><span>Download a zip archive of your results</span></a>
 		</div>
 	</div>
 </div>
 
 <hr />
 
+{% if bed_data %}
 <div class="pagination-centered">
 	<h3>BED file output</h3>
 	<p>Just a preview. This is included in the zip file above.</p>
@@ -39,10 +40,11 @@
 		<tr>
 			<td>{{ record[0] }}</td>
 			<td class="align-right">{{ record[1]|jinja_filter_add_number_commas }}</td>
-			<td class="align-right">{{ record[1]|jinja_filter_add_number_commas }}</td>
 			<td class="align-right">{{ record[2]|jinja_filter_add_number_commas }}</td>
 			<td class="align-right">{{ record[3]|jinja_filter_add_number_commas }}</td>
+			<td class="align-right">{{ record[4]|jinja_filter_add_number_commas }}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
 </table>
+{% endif %}

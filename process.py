@@ -1,18 +1,19 @@
-from flask.ext.script import Manager
 from flask.ext.mongoengine import MongoEngine
+from flask.ext.script import Manager
 from mongoengine.connection import ConnectionError
 
 from autozygosity import app, models, db
 from autozygosity.helpers import *
 from autozygosity.models import job
 
+from datetime import datetime, timedelta
 from lockfile import FileLock
-from time import sleep
 from pprint import pprint
-from datetime import datetime
 from subprocess import check_call, CalledProcessError
-import sys
+from time import sleep
 import os
+import sys
+from shutil import rmtree
 
 # Flask-script management instance
 manager = Manager(app)
@@ -21,28 +22,33 @@ manager = Manager(app)
 lock = FileLock('./' + app.config['PROJECT_NAME'].lower().replace(' ', '_'))
 
 
-def test():
-	test = []
-	with open('/Users/nikhil/Dropbox/autozygosity/uploads/2013-07-16T14:26:35-jasslem/output.bed') as file:
-		for line in file:
-			test.append(tuple(line.split()))
-	print test
+@manager.command
+def clean():
+	""" Clean uploads folder and MongoDB of all files and tokens older than X days """
+	submissions = job.objects(submitted__lt=datetime.now() - timedelta(days=app.config['SUBMISSION_RETENTION_DAYS']))
+	
+	for submission in submissions:
+		print "> Processing", submission.token
+		try:
+			rmtree(submission.full_upload_path)
+		except Exception, e:
+			print "!", str(e)
+		submission.delete()
 
 
+@manager.command
 def analyze():
 	""" Analyze submitted samples """
 	submissions = job.get_submitted()
-	analysis_script = app.config['PROJECT_PATH'] + "scripts/run_ROH.sh"
+	analysis_script = app.config['PROJECT_PATH'] + "scripts/run.sh"
 	upload_folder = app.config['UPLOADED_VCF_DEST']
 
 	for submission in submissions:
-		input_vcf = upload_folder + "/" + str(submission.submitted.strftime('%Y-%m-%dT%H:%M:%S')) + "-" + submission.token + "/input.vcf"
 		try:
 			submission.started = datetime.now()
 			submission.status = 'running'
 			submission.save()
-			sleep(5)
-			analysis = check_call([analysis_script, input_vcf])
+			check_call([analysis_script, submission.input_vcf_path])
 		except CalledProcessError, e:
 			submission.status = 'failed'
 		else:
@@ -52,15 +58,10 @@ def analyze():
 			submission.save()
 
 
-@manager.command
-def start():
-	""" Submit jobs for analysis """
+if __name__ == "__main__":
+	""" Decorator to ensure that only a single manager process runs at a time """
 	if lock.is_locked():
 		sys.exit(0)
 	else:
 		with lock:
-			test()
-
-
-if __name__ == "__main__":
-	manager.run()
+			manager.run()

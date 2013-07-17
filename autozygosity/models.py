@@ -14,11 +14,15 @@ from wtforms import TextField, ValidationError
 
 class job(Document):
 	ip_address = StringField(required=False, default="0.0.0.0")
-	token 	   = StringField(required=True,  default=upload_token(2,0))
+	token 	   = StringField(required=True,  default=generate_token(2,0))
 	status     = StringField(required=True,  default=JOB_STATUSES[0], choices=JOB_STATUSES)
 	submitted  = DateTimeField(required=True)
 	started    = DateTimeField(required=False)
-	finished   = DateTimeField(required=False)	
+	finished   = DateTimeField(required=False)
+	meta = {
+		'indexes': ['token'],
+		'ordering': ['+submitted']
+	}
 
 	@queryset_manager
 	def objects(doc_cls, queryset):
@@ -27,6 +31,31 @@ class job(Document):
 	@queryset_manager
 	def get_submitted(doc_cls, queryset):
 		return queryset.filter(status='failed')
+
+	@property
+	def token_folder(self):
+		return self.submitted.strftime('%Y-%m-%dT%H:%M:%S') + "-" + self.token
+
+	@property
+	def full_upload_path(self):
+		return '/'.join([app.config['UPLOADED_VCF_DEST'], self.token_folder])
+
+	@property
+	def input_vcf_path(self):
+		return '/'.join([self.full_upload_path, 'input.vcf'])
+
+	@property
+	def output_bed_path(self):
+		return '/'.join([self.full_upload_path, 'output.bed'])
+
+	@property
+	def output_vcf_path(self):
+		return '/'.join([self.full_upload_path, 'output.ROH.vcf'])
+
+	@property
+	def output_zip_path(self):
+		return '/'.join([self.full_upload_path, 'output.zip'])
+
 
 
 # Don't really use this anywhere right now. Maybe a future release :)

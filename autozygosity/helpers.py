@@ -4,21 +4,24 @@ import random
 from datetime import datetime
 
 from autozygosity import app
+import models
 
+from flask import render_template, abort
 from werkzeug.routing import BaseConverter
 
 
-# Custom Flask converter for token ID
 class TokenConverter(BaseConverter):
+	""" Custom Flask converter for token ID """
 	def __init__(self, url_map, *items):
 		super(TokenConverter, self).__init__(url_map)
 		self.regex = '[a-zA-Z]{5,15}'
 
 app.url_map.converters['token'] = TokenConverter
 
-# Jinja2 filter to format numbers
+
 @app.template_filter()
 def jinja_filter_add_number_commas(possible_number):
+	""" Jinja2 filter to format numbers """
 	try:
 		number = float(possible_number)
 	except ValueError, e:
@@ -27,25 +30,28 @@ def jinja_filter_add_number_commas(possible_number):
 		return str(format(number, ',.2f'))
 
 
-# Jinja2 filter for job status CSS classes
 @app.template_filter()
 def jinja_filter_status_class(status):
+	""" Jinja2 filter for job status CSS classes """
 	return app.config['STATUS_MAP'][status]
 
 
-# Jinja2 filter for job status CSS classes
 @app.template_filter()
 def jinja_filter_reverse(s):
+	""" Jinja2 filter for job status CSS classes """
 	return str(s)[::-1]
 
 
-# Jinja2 filter for human-readable timestamps
+def get_submission(token):
+	""" Returns a models.job object given a submission token """
+	return models.job.objects(token__contains = token.lower())[0]
+
+
 @app.template_filter()
 def jinja_filter_human_timestamp(the_timestamp):
 	"""
-	Get a datetime object or a int() Epoch timestamp and return a
-	pretty string like 'an hour ago', 'Yesterday', '3 months ago',
-	'just now', etc
+	Jinja2 filter for human-readable timestamps
+	http://stackoverflow.com/a/1551394
 	"""
 	now = datetime.now()
 	if type(the_timestamp) is int:
@@ -109,20 +115,22 @@ syllables = map(''.join, itertools.product(initial_consonants, vowels, final_con
 
 
 def gibberish(wordcount, wordlist=syllables):
-		return random.sample(wordlist, wordcount)
+	return random.sample(wordlist, wordcount)
 
 
-def upload_token(wordcount=2, digitcount=0):
-		numbermax = 10 ** digitcount
-		password = ''.join(gibberish(wordcount))
-		if digitcount >= 1:
-				password += str(int(random.random()*numbermax))
-		return password
+def generate_token(wordcount=2, digitcount=0):
+	numbermax = 10 ** digitcount
+	token = ''.join(gibberish(wordcount))
+	if digitcount >= 1:
+			token += str(int(random.random()*numbermax))
+	return token
 
 
-# Return all possible case permutations for a given input string
-# http://stackoverflow.com/a/6792898
 def permute_case(input_string):
+	""" 
+	Return all possible case permutations for a given input string
+	http://stackoverflow.com/a/6792898 
+	"""
 	if not input_string:
 		yield ""
 	else:

@@ -1,7 +1,0 @@
-argparse==1.2.1
-Flask==0.9
-gunicorn==0.17.3
-Jinja2==2.6
-lockfile==0.9.1
-Werkzeug==0.8.3
-wsgiref==0.1.2

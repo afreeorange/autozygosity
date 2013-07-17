@@ -11,8 +11,6 @@ from flaskext.uploads import UploadSet, configure_uploads, patch_request_class
 # Configure Flask app
 app = Flask(__name__)
 app.config.from_object('settings')
-app.config['CSRF_ENABLED'] = True
-app.config['CURRENT_YEAR'] = datetime.now().strftime("%Y")
 
 # Configure uploads
 vcf_uploads = UploadSet(name = 'vcf', extensions = ('vcf'))
@@ -30,7 +28,6 @@ except ConnectionError, e:
 	exit(1) 
 
 from autozygosity import views, models
-from helpers import *
 
 if __name__ == '__main__':
 	app.run()
