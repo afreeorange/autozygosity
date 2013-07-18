@@ -35,7 +35,7 @@ $JAVA 	-Xmx8G -jar $GATK \
 		-o $SAMPLE_DIR/QDfilter.vcf
 
 if [ $? -ne 0 ]; then
-	echo -e "! Tagging failed";
+	echo -e "! Tagging failed on $INPUT_VCF";
 	exit 1
 fi
 
@@ -51,7 +51,7 @@ mv $SAMPLE_DIR/temp_sample.map $SAMPLE_DIR/temp_sample.map.old
 sed "s/chr//" $SAMPLE_DIR/temp_sample.map.old > $SAMPLE_DIR/temp_sample.map
 
 if [ $? -ne 0 ]; then
-    echo -e "! VCFtools failed";
+    echo -e "! VCFtools failed on $INPUT_VCF";
     exit 2
 fi
 
@@ -66,7 +66,7 @@ $PLINK 	--file $SAMPLE_DIR/temp_sample \
 # cat $SAMPLE_DIR/plink.log
 
 if [ $? -ne 0 ]; then
-    echo -e "! Plink analysis failed";
+    echo -e "! Plink analysis failed on $INPUT_VCF";
     exit 3
 fi
 
@@ -77,7 +77,7 @@ $TABIX/bgzip $SAMPLE_DIR/plink_ROH.bed
 $TABIX/tabix -p bed $SAMPLE_DIR/plink_ROH.bed.gz
 
 if [ $? -ne 0 ]; then
-    echo -e "! Tabix failed";
+    echo -e "! Tabix failed on $INPUT_VCF";
     exit 4
 fi
 
@@ -89,7 +89,7 @@ $PERL 	-I $TABIX/perl $VCFTOOLS/vcf-annotate $INPUT_VCF \
 		> $SAMPLE_DIR/output.ROH.vcf
 
 if [ $? -ne 0 ]; then
-    echo -e "! Annotation failed";
+    echo -e "! Annotation failed on $INPUT_VCF";
     exit 5
 fi
 

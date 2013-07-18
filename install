@@ -1,79 +1,23 @@
 #!/bin/bash
 
-# Halt if virtualenv is not installed
-which virtualenv &> /dev/null
-if [ $? -ne 0 ]; then
-    echo -e "! Check if virtualenv is installed";
-    exit 1
-fi
-
-# Create a logs folder
-mkdir -p logs
-
-# Blah
-mkdir ./project/static/js && wget -O ./project/static/js/jquery.min.js http://code.jquery.com/jquery-1.9.1.min.js
-mv gitignore .gitignore
-
-# Set up the project folder
-project_name=$1
-if [ ! -z $project_name ]; then
-    mv project $project_name
-
-    # Rename the current directory (for virtualenv)
-    curpath=$(pwd)
-    curdir=$(basename $curpath)
-    topdir=$(dirname $curpath)
-    mv $topdir/{$curdir,$project_name}
-
-    project_files="
-    start
-    $project_name/__init__.py
-    $project_name/views.py
-    $project_name/models.py
-    "
-
-    # Because sed -i misbehaves in OS X. Rewrite this...
-    if [ "$(uname -s)" == "Darwin" ]; then
-	for file in $project_files; do
-	    sed -i "" -e "s/ project / $project_name /g" $file
-	done
-	sed -i "" -e "s/project:app/$project_name:app/g" start
-    else
-	for file in $project_files; do
-	    sed -i "s/ project / $project_name /g" $file
-	done
-	sed -i "s/project:app/$project_name:app/g" start
+# Halt if virtualenv or pip are not installed
+for command in virtualenv, pip; do
+    which $command
+    if [ $? -ne 0 ]; then
+        echo -e "! Check if $command is installed";
+        exit 1
     fi
 
-    echo -e $project_name > README.md
-    seq -s '#' ${#project_name} | sed 's/[0-9]//g'    >> README.md
-    echo -e "\n\n\nLICENSE\n-------\nSee \`LICENSE\`\n" >> README.md    
-fi
+# Create some folders
+mkdir -p logs uploads
 
 # Create a nice virtual environment
 virtualenv .
 source ./bin/activate
 
 # Install required modules
-pip install -r REQUIREMENTS
+pip install -r requirements.txt
 
 # Generate secret key
 secret_key=$(openssl rand -base64 24)
 echo -e "SECRET_KEY = \"$secret_key\"" >> settings.py
-
-# Initialize as a new git repo
-rm -rf .git
-git init
-
-cat << POST_INSTALL
-
-All done!
-
-Modernizr:
-http://modernizr.com/download/
-
-Bootstrap:
-http://twitter.github.io/bootstrap/assets/bootstrap.zip
-
-POST_INSTALL
-

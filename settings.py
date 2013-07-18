@@ -11,7 +11,7 @@ COPYRIGHT_MESSAGE = """
 <br />
 Email <a href="mailto:nikhil-anand@uiowa.edu">Nikhil Anand</a> with any questions or issues.
 <br />
-Source code <a href="#">at GitHub</a>. 
+Built with Flask, Bootstrap, &amp; MongoDB. Source code <a href="https://github.com/afreeorange/autozygosity" title="Project source code at Github">at GitHub</a>. 
 """
 SUBMISSION_RETENTION_DAYS=10
 
@@ -22,8 +22,9 @@ UPLOADED_VCF_MAX_SIZE = 108 * 1024 * 1024
 
 # Job status definitions (and associated CSS classes)
 JOB_STATUSES = ('submitted', 'running', 'completed', 'failed')
-STATUS_CLASSES = ('', 'label-info', 'label-success', 'label-important')
+STATUS_CLASSES = ('label-inverse', 'label-info', 'label-success', 'label-important')
 STATUS_MAP = dict(zip(JOB_STATUSES, STATUS_CLASSES))
 
 CSRF_ENABLED = True
 SECRET_KEY = "8MfeRORkN74/dsXMW/78BeLOu1yquSw7"
+TOKEN_REGEX = r'[a-zA-Z]{5,15}'

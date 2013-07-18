@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime
 
 from flask import Flask, render_template, make_response, send_from_directory, request, session, redirect, url_for, abort, flash, send_file
@@ -20,7 +21,8 @@ def page_not_found(e):
 
 def check_download(function):
 	""" 
-	Decorator for download functions. When used, ensures (1) a valid token, and
+	Decorator for download functions. When used, ensures 
+	(1) a valid token, and
 	(2) that the results are ready for download 
 	"""
 	def decorator(*args, **kwargs):
@@ -38,12 +40,12 @@ def check_download(function):
 
 @app.route('/download/<token:token>/input', methods=['GET'])
 def download_input(token):
-		try:
-			submission = job.objects(token__contains = token.lower())[0]
-		except Exception, e:
-			abort(404)
-		else:
-			return send_file(submission.input_vcf_path, as_attachment=True)
+	try:
+		submission = job.objects(token__contains = token.lower())[0]
+	except Exception, e:
+		abort(404)
+	else:
+		return send_file(submission.input_vcf_path, as_attachment=True)
 
 
 @app.route('/download/<token:token>/output', methods=['GET'])
@@ -64,8 +66,12 @@ def download_output_bed(token):
 	return send_file(get_submission(token).output_bed_path, as_attachment=True)
 
 
+@app.route('/token/check', methods=['POST'])
 @app.route('/token/<token:token>', methods=['GET'])
-def token(token):
+def token(token = None):
+	if request.method == 'POST':
+		token = request.form['token']
+
 	try:
 		submission = job.objects(token__contains = token.lower())[0]
 	except Exception, e:

@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{{ request.full_path }}
+
 	{% if submission %}
 
 		<div class="uploaded">
@@ -10,7 +12,7 @@
 			</div>
 		</div>
 
-		{% if submission.status == 'submitted' %}
+		{% if submission.status == 'submitted' or submission.status == 'running' %}
 			{% include "block-token-queued.html" %}
 
 		{% elif submission.status == 'completed' %}

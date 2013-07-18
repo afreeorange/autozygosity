@@ -1,6 +1,7 @@
 import string
 import itertools
 import random
+import re
 from datetime import datetime
 
 from autozygosity import app
@@ -14,7 +15,7 @@ class TokenConverter(BaseConverter):
 	""" Custom Flask converter for token ID """
 	def __init__(self, url_map, *items):
 		super(TokenConverter, self).__init__(url_map)
-		self.regex = '[a-zA-Z]{5,15}'
+		self.regex = app.config['TOKEN_REGEX']
 
 app.url_map.converters['token'] = TokenConverter
 
@@ -93,23 +94,24 @@ def jinja_filter_human_timestamp(the_timestamp):
 
 
 # https://github.com/greghaskins/gibberish/blob/master/gibberish.py
-initial_consonants = (set(string.ascii_lowercase) - set('aeiou')
-											# remove those easily confused with others
-											- set('qxc')
-											# add some crunchy clusters
-											| set(['bl', 'br', 'cl', 'cr', 'dr', 'fl',
-														 'fr', 'gl', 'gr', 'pl', 'pr', 'sk',
-														 'sl', 'sm', 'sn', 'sp', 'st', 'str',
-														 'sw', 'tr'])
-											)
-final_consonants = (set(string.ascii_lowercase) - set('aeiou')
-										# confusable
-										- set('qxcsj')
-										# crunchy clusters
-										| set(['ct', 'ft', 'mp', 'nd', 'ng', 'nk', 'nt',
-													 'pt', 'sk', 'sp', 'ss', 'st'])
-										)
-vowels = 'aeiou' # we'll keep this simple
+initial_consonants = (set(string.ascii_lowercase) - 
+					  set('aeiou') -
+ 					  # remove those easily confused with others
+					  set('qxc') |
+					  # add some crunchy clusters
+					  set(['bl', 'br', 'cl', 'cr', 'dr', 'fl',
+						   'fr', 'gl', 'gr', 'pl', 'pr', 'sk',
+						   'sl', 'sm', 'sn', 'sp', 'st', 'str',
+						   'sw', 'tr']))
+final_consonants = (set(string.ascii_lowercase) - 
+					set('aeiou') -
+					# confusable
+					set('qxcsj') |
+					# crunchy clusters
+					set(['ct', 'ft', 'mp', 'nd', 'ng', 'nk', 'nt',
+					 	 'pt', 'sk', 'sp', 'ss', 'st']))
+vowels = 'aeiou'
+
 # each syllable is consonant-vowel-consonant "pronounceable"
 syllables = map(''.join, itertools.product(initial_consonants, vowels, final_consonants))
 
@@ -142,4 +144,3 @@ def permute_case(input_string):
 			for sub_casing in permute_case(input_string[1:]):
 				yield first.lower() + sub_casing
 				yield first.upper() + sub_casing
-

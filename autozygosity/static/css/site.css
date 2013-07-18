@@ -2,6 +2,12 @@
 html,body {
 font-family: lato, helvetica, arial, sans-serif;
 }
+h1 a {
+color: #2C3E50;
+}
+h1 a:hover {
+text-decoration: none;
+}
 .uploaded {
 width: 450px;
 text-align: center;
@@ -9,10 +15,6 @@ margin: 0 auto;
 }
 .uploaded .alert {
 margin: 0 auto 20px auto;
-border: 1px dashed #D5BA8C;
--webkit-border-radius:15px;
--moz-border-radius:15px;
-border-radius:15px;
 }
 .happy-face,
 .sad-face {

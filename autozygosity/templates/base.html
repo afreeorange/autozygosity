@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-fileupload.min.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.fileupload-ui.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+		{% block head %}{% endblock %}
 
 		{% if self.styles() %}
 		<style type="text/css">
@@ -27,7 +28,8 @@
 			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade it for a better web experience</a>.</p>
 		<![endif]-->
 
-		<h1 class="pagination-centered"><a href="/">{{ config.PROJECT_NAME }}</a></h1>
+
+		<h1 class="pagination-centered"><a href="/" title="Go home!">{{ config.PROJECT_NAME }}</a></h1>
 
 		<hr />
 

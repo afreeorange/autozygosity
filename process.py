@@ -8,12 +8,10 @@ from autozygosity.models import job
 
 from datetime import datetime, timedelta
 from lockfile import FileLock
-from pprint import pprint
-from subprocess import check_call, CalledProcessError
-from time import sleep
-import os
-import sys
 from shutil import rmtree
+from subprocess import check_call, CalledProcessError
+from sys import exit
+from time import sleep
 
 # Flask-script management instance
 manager = Manager(app)
@@ -25,9 +23,9 @@ lock = FileLock('./' + app.config['PROJECT_NAME'].lower().replace(' ', '_'))
 @manager.command
 def clean():
 	""" Clean uploads folder and MongoDB of all files and tokens older than X days """
-	submissions = job.objects(submitted__lt=datetime.now() - timedelta(days=app.config['SUBMISSION_RETENTION_DAYS']))
+	old_submissions = job.objects(submitted__lt=datetime.now() - timedelta(days=app.config['SUBMISSION_RETENTION_DAYS']))
 	
-	for submission in submissions:
+	for submission in old_submissions:
 		print "> Processing", submission.token
 		try:
 			rmtree(submission.full_upload_path)
@@ -61,7 +59,7 @@ def analyze():
 if __name__ == "__main__":
 	""" Decorator to ensure that only a single manager process runs at a time """
 	if lock.is_locked():
-		sys.exit(0)
+		exit(0)
 	else:
 		with lock:
 			manager.run()
