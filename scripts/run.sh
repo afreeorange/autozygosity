@@ -36,7 +36,7 @@ $JAVA 	-Xmx8G -jar $GATK \
 
 if [ $? -ne 0 ]; then
 	echo -e "! Tagging failed on $INPUT_VCF";
-	exit 1
+	exit 200
 fi
 
 # Remove low-quality SNPs
@@ -52,7 +52,7 @@ sed "s/chr//" $SAMPLE_DIR/temp_sample.map.old > $SAMPLE_DIR/temp_sample.map
 
 if [ $? -ne 0 ]; then
     echo -e "! VCFtools failed on $INPUT_VCF";
-    exit 2
+    exit 300
 fi
 
 # Plink analysis
@@ -67,7 +67,7 @@ $PLINK 	--file $SAMPLE_DIR/temp_sample \
 
 if [ $? -ne 0 ]; then
     echo -e "! Plink analysis failed on $INPUT_VCF";
-    exit 3
+    exit 400
 fi
 
 # Format plink output as a BED file
@@ -78,7 +78,7 @@ $TABIX/tabix -p bed $SAMPLE_DIR/plink_ROH.bed.gz
 
 if [ $? -ne 0 ]; then
     echo -e "! Tabix failed on $INPUT_VCF";
-    exit 4
+    exit 500
 fi
 
 # Annotate the original VCF with the identified regions
@@ -90,7 +90,7 @@ $PERL 	-I $TABIX/perl $VCFTOOLS/vcf-annotate $INPUT_VCF \
 
 if [ $? -ne 0 ]; then
     echo -e "! Annotation failed on $INPUT_VCF";
-    exit 5
+    exit 600
 fi
 
 gunzip $SAMPLE_DIR/plink_ROH.bed.gz
@@ -100,4 +100,4 @@ mv $SAMPLE_DIR/plink_ROH.bed $SAMPLE_DIR/output.bed
 zip $SAMPLE_DIR/output.zip $SAMPLE_DIR/output.ROH.vcf $SAMPLE_DIR/output.bed
 
 # Clean up
-rm $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/*.idx
+rm $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/input.vcf.idx

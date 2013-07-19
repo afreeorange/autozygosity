@@ -48,22 +48,22 @@ def download_input(token):
 		return send_file(submission.input_vcf_path, as_attachment=True)
 
 
+@check_download
 @app.route('/download/<token:token>/output', methods=['GET'])
-@check_download
 def download_output(token):
-	return send_file(get_submission(token).output_zip_path, as_attachment=True)
+	return send_file(get_submission(token).output_zip_path, as_attachment=True, mimetype="application/octet-stream")
 
 
+@check_download
 @app.route('/download/<token:token>/output/vcf', methods=['GET'])
-@check_download
 def download_output_vcf(token):
-	return send_file(get_submission(token).output_vcf_path, as_attachment=True)
+	return send_file(get_submission(token).output_vcf_path, as_attachment=True, mimetype="text/vcf")
 
 
-@app.route('/download/<token:token>/output/bed', methods=['GET'])
 @check_download
+@app.route('/download/<token:token>/output/bed', methods=['GET'])
 def download_output_bed(token):
-	return send_file(get_submission(token).output_bed_path, as_attachment=True)
+	return send_file(get_submission(token).output_bed_path, as_attachment=True, mimetype="text/bed")
 
 
 @app.route('/token/check', methods=['POST'])
@@ -102,7 +102,7 @@ def index():
 
 		try:
 			upload = vcf_uploads.save(storage=request.files['vcf'], folder="".join([submission_folder, "-", token]), name="input.vcf")
-			return render_template("uploaded.html", token=token)
+			return redirect("/token/" + token)
 		except Exception, e:
 			abort(500)
 

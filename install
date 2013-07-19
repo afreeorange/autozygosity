@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Halt if virtualenv or pip are not installed
-for command in virtualenv, pip; do
-    which $command
-    if [ $? -ne 0 ]; then
-        echo -e "! Check if $command is installed";
-        exit 1
-    fi
+for command in virtualenv pip; do
+	which $command &> /dev/null
+	if [ $? -ne 0 ]; then
+		echo -e "! Check if $command is installed";
+		exit 1
+	fi
+done
 
 # Create some folders
 mkdir -p logs uploads

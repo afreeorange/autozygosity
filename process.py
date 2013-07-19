@@ -57,7 +57,6 @@ def analyze():
 
 
 if __name__ == "__main__":
-	""" Decorator to ensure that only a single manager process runs at a time """
 	if lock.is_locked():
 		exit(0)
 	else:

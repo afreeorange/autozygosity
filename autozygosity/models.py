@@ -30,7 +30,7 @@ class job(Document):
 
 	@queryset_manager
 	def get_submitted(doc_cls, queryset):
-		return queryset.filter(status='failed')
+		return queryset.filter(status='submitted')
 
 	@property
 	def token_folder(self):
