@@ -6,21 +6,22 @@
 
 	{% if submission %}
 
-		<div class="uploaded">
-			<div class="alert">
-				<h2>{{ submission.token }}</h2>
-			</div>
-		</div>
+		<h1 id="token">{{ submission.token }}</h1>
 
-		{% if submission.status == 'submitted' or submission.status == 'running' %}
-			{% include "block-token-queued.html" %}
-
-		{% elif submission.status == 'completed' %}
-			{% include "block-token-completed.html" %}
+		{% if first_time_visitor() %}
+			{% include "block-token-explanation.html" %}
 
 		{% else %}
-			{% include "block-token-failed.html" %}
+			{% if submission.status == 'submitted' or submission.status == 'running' %}
+				{% include "block-token-queued.html" %}
 
+			{% elif submission.status == 'completed' %}
+				{% include "block-token-completed.html" %}
+
+			{% else %}
+				{% include "block-token-failed.html" %}
+
+			{% endif %}
 		{% endif %}
 
 		<hr />

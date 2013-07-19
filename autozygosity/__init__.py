@@ -28,6 +28,7 @@ except ConnectionError, e:
 	exit(1) 
 
 from autozygosity import views, models
+app.jinja_env.globals.update(first_time_visitor=views.first_time_check)
 
 if __name__ == '__main__':
 	app.run()

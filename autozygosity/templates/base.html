@@ -28,8 +28,7 @@
 			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade it for a better web experience</a>.</p>
 		<![endif]-->
 
-
-		<h1 class="pagination-centered"><a href="/" title="Go home!">{{ config.PROJECT_NAME }}</a></h1>
+		<h1 class="pagination-centered" id="masthead"><a href="/" title="Go home!">{{ config.PROJECT_NAME }}</a></h1>
 
 		<hr />
 
@@ -48,7 +47,6 @@
 
 		<footer>
 			<small>
-				
 				{% if self.footer() %}
 					{% block footer %}{% endblock %}
 				{% endif %}

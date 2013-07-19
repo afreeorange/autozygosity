@@ -38,6 +38,14 @@ def check_download(function):
 	return decorator
 
 
+def first_time_check():
+	if 'first_time' not in session:
+		session['first_time'] = True
+	else:
+		session['first_time'] = False
+	return session['first_time']
+
+
 @app.route('/download/<token:token>/input', methods=['GET'])
 def download_input(token):
 	try:

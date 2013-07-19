@@ -63,40 +63,36 @@
 
 // $(function () {
 
-//     $("#progress").progressbar();
-//     $("#progress").hide();
-//     $("#submit").click(upload);
+// 	var bar = $('.bar');
+// 	var percent = $('.percent');
+// 	var status = $('#status');
+// 	var visual = $('#visual');
 
-// 	// var bar = $('.bar');
-// 	// var percent = $('.percent');
-// 	// var status = $('#status');
-// 	// var visual = $('#visual');
+// 	percent.html('0%');
+// 	console.log('Hello');
 
-// 	// percent.html('0%');
-// 	// console.log('Hello');
-
-// 	// // attach handler to form's submit event 
-// 	// $('#vcfupload').ajaxForm({
-// 	// 	beforeSend: function() {
-// 	// 		console.log('Before submit');
-// 	// 		status.empty();
-// 	// 		var percentVal = '0%';
-// 	// 		bar.width(percentVal)
-// 	// 		percent.html(percentVal);
-// 	// 		visual.slideDown();
-// 	// 	},
-// 	// 	uploadProgress: function(event, position, total, percentComplete) {
-// 	// 		var percentVal = percentComplete + '%';
-// 	// 		bar.width(percentVal);
-// 	// 		percent.html(percentVal);
-// 	// 		console.log(percentVal);
-// 	// 	}
-// 	// 	// complete: function(xhr) {
-// 	// 	// 	console.log('Done submitting');
-// 	// 	// 	status.html(xhr.responseText);
-// 	// 	// 	visual.slideUp();
-// 	// 	// }
-// 	// });
+// 	// attach handler to form's submit event 
+// 	$('#vcfupload').ajaxForm({
+// 		beforeSend: function() {
+// 			console.log('Before submit');
+// 			status.empty();
+// 			var percentVal = '0%';
+// 			bar.width(percentVal)
+// 			percent.html(percentVal);
+// 			visual.slideDown();
+// 		},
+// 		uploadProgress: function(event, position, total, percentComplete) {
+// 			var percentVal = percentComplete + '%';
+// 			bar.width(percentVal);
+// 			percent.html(percentVal);
+// 			console.log(percentVal);
+// 		},
+// 		complete: function(xhr) {
+// 			console.log('Done submitting');
+// 			console.log(xhr.getAllResponseHeaders());
+// 			// window.location.href = xhr.responseText;
+// 		}
+// 	});
 
 // });
 {% endblock %}
