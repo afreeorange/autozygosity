@@ -21,6 +21,19 @@ app.url_map.converters['token'] = TokenConverter
 
 
 @app.template_filter()
+def jinja_filter_jobs_ahead(job_count):
+	""" Return the number of jobs ahead of current submission in a grammatically correct format """
+	stub = "There "
+	if job_count == 0:
+		phrase = "are no submissions"
+	elif job_count == 1:
+		phrase = "is one submission"
+	else:
+		phrase = "are " + str(job_count) + " submissions"
+	return stub + phrase
+
+
+@app.template_filter()
 def jinja_filter_add_number_commas(possible_number):
 	""" Jinja2 filter to format numbers """
 	try:

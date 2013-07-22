@@ -39,6 +39,7 @@ def check_download(function):
 
 
 def first_time_check():
+	""" Check if this is a first-time visitor based on a session cookie """
 	if 'first_time' not in session:
 		session['first_time'] = True
 	else:
@@ -80,6 +81,8 @@ def token(token = None):
 	if request.method == 'POST':
 		token = request.form['token']
 
+	jobs_ahead = job.get_submitted().count()
+
 	try:
 		submission = job.objects(token__contains = token.lower())[0]
 	except Exception, e:
@@ -92,7 +95,7 @@ def token(token = None):
 					bed_data.append(tuple(line.split()))
 		except Exception, e:
 			pass
-		resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data))
+		resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data, jobs_ahead=jobs_ahead))
 		resp.headers.add('token', token) # Need this for JQuery form plugin redirect
 		return resp
 

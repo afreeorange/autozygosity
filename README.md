@@ -4,11 +4,15 @@ Homozygosity Mapping is a powerful technique used to narrow the search space for
 
 This project is the public, anonymous, token-based front end to the analysis tool, which can retain the region containing the disease-causing variant in a consanguineous pedigree, while eliminating XXX% of identified variants from consideration.
 
-# Requirements
+Requirements
+------------
 
-*NIX, Python 2.7, Flask (and associated plugins), Gunicorn, and MongoDB.
+* *NIX
+* Python 2.7
+* A running MongoDB server
 
-# Installation & Configuration
+Installation & Configuration
+----------------------------
 
 * Run `install` first. It should take care of most requirements for you.
 * Modify `settings.py` to suit your environment.
@@ -26,6 +30,7 @@ If you want a Flask server for testing,
 
 	./start flask
 
-# License
+License
+-------
 
 See `LICENSE`

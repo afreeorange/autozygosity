@@ -9,7 +9,7 @@
 				<button id="token-submit" type="submit" class="btn btn-success">Check  <i class="icon-chevron-right icon-white"></i></button>
 			</div>
 			{% if session['last_token'] %}
-			<small>Your most recent token was &#8220;<a id="last-submission" href="/token/{{ session['last_token'] }}">{{ session['last_token'] }}</a>&#8221;.</small>				
+			<small>Your most recent token was &#8220;<strong>{{ session['last_token'] }}</strong>&#8221;. Want to <a id="last-submission" href="/token/{{ session['last_token'] }}">check its status</a>?</small>
 			{% endif %}
 		</form>
 	</div>

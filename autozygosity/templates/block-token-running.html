@@ -1,8 +1,6 @@
 <div class="pagination-centered">
-	<h2>Check back soon.</h2>
-	<p>Your submission is queued for analysis. Results should be up shortly.
-	<br />
-	<strong>{{ jobs_ahead|jinja_filter_jobs_ahead }}</strong> ahead of yours.
+	<h2>Your submission's being analyzed.</h2>
+	<p>Should be done in a few minutes. Hang on a little more!
 	{% if 'token' in request.form %}
 	<br />
 	You can always check the status of your submission <a href="{{ request.form['token'] }}">on this page</a>.

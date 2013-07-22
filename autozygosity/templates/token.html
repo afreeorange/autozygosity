@@ -12,8 +12,11 @@
 			{% include "block-token-explanation.html" %}
 
 		{% else %}
-			{% if submission.status == 'submitted' or submission.status == 'running' %}
+			{% if submission.status == 'submitted' %}
 				{% include "block-token-queued.html" %}
+
+			{% elif submission.status == 'running' %}
+				{% include "block-token-running.html" %}
 
 			{% elif submission.status == 'completed' %}
 				{% include "block-token-completed.html" %}
