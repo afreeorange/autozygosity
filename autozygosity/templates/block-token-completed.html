@@ -4,7 +4,11 @@
 	<p>
 		Exciting! Download them below.
 		<br />
-		<small>Please note that these will be available for just 10 days</small>
+		<small>
+			Please note that these will be available for just 10 days
+			<br />
+			You can download <a href="/token/{{ submission.token }}/bed">the BED</a> and <a href="/token/{{ submission.token }}">VCF</a> outputs separately.
+		</small>
 	</p>
 
 	<div class="row">
@@ -39,10 +43,10 @@
 	{% for record in bed_data %}
 		<tr>
 			<td>{{ record[0] }}</td>
-			<td class="align-right">{{ record[1]|jinja_filter_add_number_commas }}</td>
-			<td class="align-right">{{ record[2]|jinja_filter_add_number_commas }}</td>
-			<td class="align-right">{{ record[3]|jinja_filter_add_number_commas }}</td>
-			<td class="align-right">{{ record[4]|jinja_filter_add_number_commas }}</td>
+			<td class="align-right">{{ record[1] }}</td>
+			<td class="align-right">{{ record[2] }}</td>
+			<td class="align-right">{{ record[3] }}</td>
+			<td class="align-right">{{ record[4] }}</td>
 		</tr>
 	{% endfor %}
 	</tbody>

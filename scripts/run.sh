@@ -97,7 +97,8 @@ gunzip $SAMPLE_DIR/plink_ROH.bed.gz
 mv $SAMPLE_DIR/plink_ROH.bed $SAMPLE_DIR/output.bed
 
 # Compress output files
-zip $SAMPLE_DIR/output.zip $SAMPLE_DIR/output.ROH.vcf $SAMPLE_DIR/output.bed
+cd $SAMPLE_DIR
+zip output.zip output.ROH.vcf output.bed
 
 # Clean up
 rm $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/input.vcf.idx

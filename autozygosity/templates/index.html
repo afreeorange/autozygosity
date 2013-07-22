@@ -4,7 +4,7 @@
 
 <p>Homozygosity Mapping is a powerful technique used to narrow the search space for disease-causing variants in exome sequencing data. This has traditionally been performed using a separate micro-array based experiment, but with costs of exomes continuing to fall, homozygosity mapping can be performed using only exome sequence.</p>
 
-<p>This homozygosity mapping tool can retain the region containing the disease-causing variant in a consanguineous pedigree, while eliminating XXX% of identified variants from consideration. We also show this same reduction in a large publically-available dataset from consanguineous families.</p>
+<p>This homozygosity mapping tool can retain the region containing the disease-causing variant in a consanguineous pedigree, while eliminating XXX% of identified variants from consideration.</p>
 
 {% include "form-vcf.html" %}
 
@@ -16,84 +16,92 @@
 
 {% block javascript %}
 
-// function showProgress(evt) {
-//     if (evt.lengthComputable) {
-//         var percentComplete = (evt.loaded / evt.total) * 100;
-//         $('#progress').progressbar("option", "value", percentComplete );
-//     }  
-// }
+$(function () {
 
+	/* Can consolidate a lot but readability is paramount, and space (and bandwidth) are cheap. */
 
-// function upload(){
-//     var fileIn = $("#vcf")[0];
-//     //Has any file been selected yet?
-//     if (fileIn.files === undefined || fileIn.files.length == 0) {
-//         console.log("Please select a file");
-//         return;
-//     }
+	// Custom token validator
+	$.validator.addMethod("validtoken", function( value, element ) {
+		var result = this.optional(element) || /^[a-z]{5,15}$/.test(value);
+		return result;
+	}, "Your token's between 5 and 15 characters.<br />It doesn't have any numbers or strange characters.");
 
-//     //We will upload only one file in this demo
-//     var file = fileIn.files[0];
-//     //Show the progress bar
-//     $("#progress").show();
+	// Check file extension (doesn't mean it's a _valid_ VCF however...)
+	$.validator.addMethod("vcfextension", function( value, element ) {
+		var result = this.optional(element) || /^.*.\.vcf$/i.test(value);
+		return result;
+	}, "You need to upload a VCF file. It should end in '.vcf'");
 
-//     $.ajax({
-//         url: "/",
-//         type: "POST",
-//         data: file,
-//         processData: false, //Work around #1
-//         contentType: file.type, //Work around #2
-//         success: function(){
-//             $("#progress").hide();
-//         },
-//         error: function(){console.log("Failed");},
-//         //Work around #3
-//         xhr: function() {
-//             myXhr = $.ajaxSettings.xhr();
-//             if(myXhr.upload){
-//                 myXhr.upload.addEventListener('progress',showProgress, false);
-//             } else {
-//                 console.log("Upload progress is not supported.");
-//             }
-//             return myXhr;
-//         }
-//     });
-// }
+	// Validate token-check form before submission
+	$("#tokencheck").validate({
+		rules: {
+			token: {
+				required: true,
+				validtoken: true
+			}
+		},
+		messages: {
+			token: {
+				required: "You need to give me a token"
+			}
+		},
+		errorContainer: '#tokencheck-messages',
+		errorLabelContainer: '#tokencheck-messages',
+		errorElement: "span",
+		wrapper: ""
+	});
 
+	$("#vcfupload").validate({
+		rules: {
+			vcf: {
+				required: true,
+				vcfextension: true
+			}
+		},
+		messages: {
+			vcf: {
+				required: "You need to specify an input file"
+			}
+		},
+		errorContainer: '#vcfupload-messages',
+		errorLabelContainer: '#vcfupload-messages',
+		errorElement: "span",
+		wrapper: ""
+	});
 
-// $(function () {
+	// Upload progress bar
+	var bar = $('.bar');
+	var percent = $('.percent');
+	var visual = $('#visual-progress');
 
-// 	var bar = $('.bar');
-// 	var percent = $('.percent');
-// 	var status = $('#status');
-// 	var visual = $('#visual');
+	percent.html('0%');
 
-// 	percent.html('0%');
-// 	console.log('Hello');
+	$('#vcfupload').ajaxForm({
+		beforeSend: function() {
+			var percentVal = '0%';
+			bar.width(percentVal)
+			percent.html(percentVal);
 
-// 	// attach handler to form's submit event 
-// 	$('#vcfupload').ajaxForm({
-// 		beforeSend: function() {
-// 			console.log('Before submit');
-// 			status.empty();
-// 			var percentVal = '0%';
-// 			bar.width(percentVal)
-// 			percent.html(percentVal);
-// 			visual.slideDown();
-// 		},
-// 		uploadProgress: function(event, position, total, percentComplete) {
-// 			var percentVal = percentComplete + '%';
-// 			bar.width(percentVal);
-// 			percent.html(percentVal);
-// 			console.log(percentVal);
-// 		},
-// 		complete: function(xhr) {
-// 			console.log('Done submitting');
-// 			console.log(xhr.getAllResponseHeaders());
-// 			// window.location.href = xhr.responseText;
-// 		}
-// 	});
+			visual.slideDown();
+			$('.hide-after-submit').hide();
+			$('#token-submit').attr('disabled', 'disabled');
+		},
+		uploadProgress: function(event, position, total, percentComplete) {
+			var percentVal = percentComplete + '%';
+			bar.width(percentVal);
+			percent.html(percentVal);
+		},
+		complete: function(xhr) {
+			$('.hide-after-submit ').fadeOut();
+			$('#submit').attr('disabled', 'disabled');
 
-// });
+			// Here, I make Flask return a header with the submission token. This is
+			// because I couldn't figure out how to get the response URI (_not_ responseText)
+			// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
+			// Could be missing something. This will have to do for now.
+			window.location.href = "/token/" + xhr.getResponseHeader('token');
+		}
+	});
+
+});
 {% endblock %}
-

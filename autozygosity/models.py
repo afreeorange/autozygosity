@@ -8,7 +8,7 @@ from settings import *
 from mongoengine import Document, StringField, DateTimeField, ListField, queryset_manager
 from flask.ext.mongoengine.wtf import model_form
 
-from flask.ext.wtf import Form, FileField, validators
+from flask.ext.wtf import Form, FileField, TextField, validators
 from wtforms import TextField, ValidationError
 
 
@@ -90,11 +90,11 @@ class job_form(Form):
 			raise ValidationError('You must upload a VCF file')
 
 
-class token_form(Form):
-	token = StringField(u'Upload token', [validators.Required(message = u'You must specify a token')])
+class check_form(Form):
+	token = TextField(u'Submission token', [validators.required(message = u'You must specify a submission token')])
 
 	def validate_token(form, field):
-		m = re.match('[a-zA-Z]{5,15}', field.data)
+		m = re.match(app.config['TOKEN_REGEX'], field.data)
 		if not m:
 			raise ValidationError('You must supply a valid token')
 			

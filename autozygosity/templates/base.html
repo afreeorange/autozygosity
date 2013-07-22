@@ -24,8 +24,18 @@
 		{% endif %}
 	</head>
 	<body class="container">
-		<!--[if lt IE 7]>
-			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade it for a better web experience</a>.</p>
+
+		<!--
+
+		Well, aren't _you_ the curious kitten?
+
+		https://github.com/afreeorange/autozygosity
+
+
+		-->
+
+		<!--[if lt IE 8]>
+			<div class="alert">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade it to use this site (and many more on the web) properly</a>.</div>
 		<![endif]-->
 
 		<h1 class="pagination-centered" id="masthead"><a href="/" title="Go home!">{{ config.PROJECT_NAME }}</a></h1>
@@ -59,6 +69,7 @@
 		<script src="{{ url_for('static', filename='js/jquery.ui.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/jquery.cookie.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/jquery.form.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/jquery.validate.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-fileupload.min.js') }}"></script>
 		<script type="text/javascript">

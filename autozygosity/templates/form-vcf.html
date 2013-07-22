@@ -8,24 +8,21 @@
 				<i class="icon-file fileupload-exists"></i> 
 				<span class="fileupload-preview"></span>
 			</div>
-			<span class="btn btn-file">
+			<span class="hide-after-submit btn btn-file">
 				<span class="fileupload-new"><i class="icon-file"></i> Select a file</span>
-				<span class="fileupload-exists"><i class="icon-repeat"></i> Change</span>
+				<span class="hide-after-submit fileupload-exists"><i class="icon-repeat"></i> Change</span>
 				{{ submission_form.vcf(id="vcf") }}
 			</span>
-			<a href="#" class="btn fileupload-exists" data-dismiss="fileupload"><i class="icon-remove-circle"></i> Remove</a>
+			<a href="#" class="btn hide-after-submit fileupload-exists" data-dismiss="fileupload"><i class="icon-remove-circle"></i> Remove</a>
 			<button type="submit" id="submit" class="btn btn-success">Submit <i class="icon-chevron-right icon-white"></i></button>
 		</div>
-		{% if submission_form.vcf.errors %}
-			{% for error in submission_form.vcf.errors %}
-				<br /><span class="label label-important label-error">{{ error }}</span>
-			{% endfor %}
-		{% endif %}
+		<br />
+		<span id="vcfupload-messages" class="label label-important label-error">{{ error }}</span>
 	</div>
 
-	<div class="row" id="visual" style="display:none;">
+	<div class="row" id="visual-progress" style="display:none;">
 		<div class="span11">
-			<div id="progress" class="progress progress-success progress-striped">
+			<div id="progress" class="progress progress-success progress-striped active">
 				<div class="bar" style="width: 0%;"></div>
 			</div>
 		</div>

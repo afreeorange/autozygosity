@@ -4,7 +4,7 @@ from datetime import datetime
 
 from flask import Flask, render_template, make_response, send_from_directory, request, session, redirect, url_for, abort, flash, send_file
 from autozygosity import app, vcf_uploads
-from models import job, job_form, token_form
+from models import job, job_form, check_form
 from helpers import *
 
 
@@ -87,18 +87,21 @@ def token(token = None):
 	else:
 		bed_data = []
 		try:
-			with open(submission.output_bed_path()) as file:
+			with open(submission.output_bed_path) as file:
 				for line in file:
 					bed_data.append(tuple(line.split()))
 		except Exception, e:
 			pass
-		return render_template("token.html", submission = submission, bed_data = bed_data)
+		resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data))
+		resp.headers.add('token', token) # Need this for JQuery form plugin redirect
+		return resp
 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 	submission_form = job_form()
+	token_form = check_form()
 
 	if request.method == 'POST' and submission_form.validate():
 		token = generate_token()
@@ -110,11 +113,16 @@ def index():
 
 		try:
 			upload = vcf_uploads.save(storage=request.files['vcf'], folder="".join([submission_folder, "-", token]), name="input.vcf")
-			return redirect("/token/" + token)
 		except Exception, e:
 			abort(500)
+		else:
+			session['last_token'] = token
+			return redirect("/token/" + token)
 
-	return render_template("index.html", submission_form=submission_form, status_form=token_form())
+	elif request.method == 'POST' and token_form.validate():
+		token(request.form['token'])
+
+	return render_template("index.html", submission_form=submission_form, token_form=token_form)
 
 
 @app.route('/favicon.ico')
