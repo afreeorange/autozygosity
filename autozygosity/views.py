@@ -81,7 +81,7 @@ def token(token = None):
 	if request.method == 'POST':
 		token = request.form['token']
 
-	jobs_ahead = job.get_submitted().count()
+	jobs_ahead = job.get_submitted().count() - 1
 
 	try:
 		submission = job.objects(token__contains = token.lower())[0]
