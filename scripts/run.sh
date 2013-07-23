@@ -96,6 +96,9 @@ fi
 gunzip $SAMPLE_DIR/plink_ROH.bed.gz
 mv $SAMPLE_DIR/plink_ROH.bed $SAMPLE_DIR/output.bed
 
+# Change chr23 to chrX (Plink!!)
+sed -i 's/chr23/chrX/' $SAMPLE_DIR/output.bed
+
 # Compress output files
 cd $SAMPLE_DIR
 zip output.zip output.ROH.vcf output.bed

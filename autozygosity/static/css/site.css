@@ -89,13 +89,6 @@ background: url('/static/img/icon-results-zip.png') -108px 0 no-repeat;
 #tokencheck a:hover {
 background-color: #CC0000;
 }
-.bed-results tbody {
-font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-font-size: ;
-}
-.align-right {
-text-align: right!important;
-}
 footer {
 padding: 0 0 25px 50px;
 background: url("/static/img/footer-logo.png") 0 5px no-repeat;
@@ -109,3 +102,20 @@ font-weight: bold;
 #last-submission:hover {
 background: none!important;
 }
+#bed-table tbody td {
+font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+text-align: right;
+}
+#bed-table thead th {
+cursor: pointer;
+text-align: right;
+}
+.align-left {
+text-align: left!important;
+}
+
+/* Jquery datatables styling */
+.sorting { background: url('../img/datatables/sort_both.png') no-repeat center left; }
+.sorting_asc { background: url('../img/datatables/sort_asc.png') no-repeat center left; }
+.sorting_desc { background: url('../img/datatables/sort_desc.png') no-repeat center left; }
+.align-left { background-position: right; } 

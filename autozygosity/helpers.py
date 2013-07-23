@@ -2,12 +2,13 @@ import string
 import itertools
 import random
 import re
+from socket import getfqdn
 from datetime import datetime
 
 from autozygosity import app
 import models
 
-from flask import render_template, abort
+from flask import render_template, abort, request, session
 from werkzeug.routing import BaseConverter
 
 
@@ -20,28 +21,34 @@ class TokenConverter(BaseConverter):
 app.url_map.converters['token'] = TokenConverter
 
 
-@app.template_filter()
-def jinja_filter_jobs_ahead(job_count):
-	""" Return the number of jobs ahead of current submission in a grammatically correct format """
-	stub = "There "
-	if job_count == 0:
-		phrase = "are no submissions"
-	elif job_count == 1:
-		phrase = "is one submission"
+def jinja_method_first_time_check():
+	""" Jinja2 method to track first-time visitors """
+	if 'first_time' not in session:
+		session['first_time'] = True
 	else:
-		phrase = "are " + str(job_count) + " submissions"
-	return stub + phrase
+		session['first_time'] = False
+	return session['first_time']
+
+
+def jinja_method_get_hostname():
+	""" Jinja2 method to get the hostname """
+	return request.host_url
 
 
 @app.template_filter()
 def jinja_filter_add_number_commas(possible_number):
 	""" Jinja2 filter to format numbers """
 	try:
-		number = float(possible_number)
+		number = int(possible_number)
 	except ValueError, e:
-		return possible_number
+		try:
+			number = float(possible_number)
+		except ValueError, e:
+			return possible_number
+		else:
+			return str(format(number, ',.2f'))
 	else:
-		return str(format(number, ',.2f'))
+		return str(format(number, ',d'))
 
 
 @app.template_filter()

@@ -5,14 +5,14 @@ HOST="0.0.0.0"
 PORT=5000
 DEBUG = True
 
-PROJECT_NAME = "Homozygosity Mapping"
+PROJECT_NAME = "Test Project"
 MONGODB_SETTINGS = {'DB': "autozygosity", 'PORT': 27017}
 COPYRIGHT_MESSAGE = """
 &copy """ + datetime.now().strftime("%Y") + """ <a href="http://genome.uiowa.edu">The Center for Bioinformatics &amp; Computational Biology</a> at <a href="http://www.uiowa.edu">The University of Iowa</a>
 <br />
 Email <a href="mailto:nikhil-anand@uiowa.edu">Nikhil Anand</a> with any questions, issues, or bugs (especially bugs.)
 <br />
-Built with Flask &amp; MongoDB. Source <a href="https://github.com/afreeorange/autozygosity" title="Project source code at Github">at GitHub</a>. 
+Source <a href="https://github.com/afreeorange/autozygosity" title="Project source code at Github">at GitHub</a>. 
 """
 SUBMISSION_RETENTION_DAYS=10
 

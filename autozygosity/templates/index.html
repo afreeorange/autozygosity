@@ -69,39 +69,39 @@ $(function () {
 		wrapper: ""
 	});
 
-	// Upload progress bar
-	var bar = $('.bar');
-	var percent = $('.percent');
-	var visual = $('#visual-progress');
+	#// Upload progress bar
+	#var bar = $('.bar');
+	#var percent = $('.percent');
+	#var visual = $('#visual-progress');
 
-	percent.html('0%');
+	#percent.html('0%');
 
-	$('#vcfupload').ajaxForm({
-		beforeSend: function() {
-			var percentVal = '0%';
-			bar.width(percentVal)
-			percent.html(percentVal);
+	#$('#vcfupload').ajaxForm({
+	#	beforeSend: function() {
+	#		var percentVal = '0%';
+	#		bar.width(percentVal)
+	#		percent.html(percentVal);
 
-			visual.slideDown();
-			$('.hide-after-submit').hide();
-			$('#token-submit').attr('disabled', 'disabled');
-		},
-		uploadProgress: function(event, position, total, percentComplete) {
-			var percentVal = percentComplete + '%';
-			bar.width(percentVal);
-			percent.html(percentVal);
-		},
-		complete: function(xhr) {
-			$('.hide-after-submit ').fadeOut();
-			$('#submit').attr('disabled', 'disabled');
+	#		visual.slideDown();
+	#		$('.hide-after-submit').hide();
+	#		$('#token-submit').attr('disabled', 'disabled');
+	#	},
+	#	uploadProgress: function(event, position, total, percentComplete) {
+	#		var percentVal = percentComplete + '%';
+	#		bar.width(percentVal);
+	#		percent.html(percentVal);
+	#	},
+	#	complete: function(xhr) {
+	#		$('.hide-after-submit ').fadeOut();
+	#		$('#submit').attr('disabled', 'disabled');
 
-			// Here, I make Flask return a header with the submission token. This is
-			// because I couldn't figure out how to get the response URI (_not_ responseText)
-			// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
-			// Could be missing something. This will have to do for now.
-			window.location.href = "/token/" + xhr.getResponseHeader('token');
-		}
-	});
+	#		// Here, I make Flask return a header with the submission token. This is
+	#		// because I couldn't figure out how to get the response URI (_not_ responseText)
+	#		// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
+	#		// Could be missing something. This will have to do for now.
+	#		window.location.href = "/token/" + xhr.getResponseHeader('token');
+	#	}
+	#});
 
 });
 {% endblock %}

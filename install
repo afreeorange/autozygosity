@@ -11,6 +11,7 @@ done
 
 # Create some folders
 mkdir -p logs uploads
+mkdir scripts/{bin,ref}
 
 # Create a nice virtual environment
 virtualenv .

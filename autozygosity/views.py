@@ -6,7 +6,7 @@ from flask import Flask, render_template, make_response, send_from_directory, re
 from autozygosity import app, vcf_uploads
 from models import job, job_form, check_form
 from helpers import *
-
+import socket
 
 # Custom error pages
 @app.errorhandler(404)
@@ -38,15 +38,6 @@ def check_download(function):
 	return decorator
 
 
-def first_time_check():
-	""" Check if this is a first-time visitor based on a session cookie """
-	if 'first_time' not in session:
-		session['first_time'] = True
-	else:
-		session['first_time'] = False
-	return session['first_time']
-
-
 @app.route('/download/<token:token>/input', methods=['GET'])
 def download_input(token):
 	try:
@@ -69,7 +60,6 @@ def download_output_vcf(token):
 	return send_file(get_submission(token).output_vcf_path, as_attachment=True, mimetype="text/vcf")
 
 
-@check_download
 @app.route('/download/<token:token>/output/bed', methods=['GET'])
 def download_output_bed(token):
 	return send_file(get_submission(token).output_bed_path, as_attachment=True, mimetype="text/bed")
@@ -80,9 +70,8 @@ def download_output_bed(token):
 def token(token = None):
 	if request.method == 'POST':
 		token = request.form['token']
-
-	jobs_ahead = job.get_submitted().count() - 1
-
+	print socket.gethostname()
+	print socket.getfqdn()
 	try:
 		submission = job.objects(token__contains = token.lower())[0]
 	except Exception, e:
@@ -95,7 +84,7 @@ def token(token = None):
 					bed_data.append(tuple(line.split()))
 		except Exception, e:
 			pass
-		resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data, jobs_ahead=jobs_ahead))
+		resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data))
 		resp.headers.add('token', token) # Need this for JQuery form plugin redirect
 		return resp
 
