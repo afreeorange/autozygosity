@@ -7,17 +7,27 @@
 # Nikhil Anand <nikhil-anand@uiowa.edu>
 
 
-INPUT_VCF=$1
-SAMPLE_DIR=$(dirname $INPUT_VCF)
+### Edit these!
 
 BINARY_DIR="/home/adeluca"
-
 REFERENCE=$BINARY_DIR/ref/hg19.fa
 GATK=$BINARY_DIR/bin/gatk-master/dist/GenomeAnalysisTK.jar
 VCFTOOLS=$BINARY_DIR/bin/vcftools/bin/
 PLINK=$BINARY_DIR/bin/plink/plink
 TABIX=$BINARY_DIR/bin/tabix/
 BEDTOOLS=$BINARY_DIR/bin/bedtools/bin/
+
+### Don't touch anything else.
+
+INPUT_VCF=$1
+SAMPLE_DIR=$(dirname $INPUT_VCF)
+TOKEN=$(basename $INPUT_VCF)
+
+# Run parameters
+MIN_VARIANT_QUALITY=30
+MIN_QUALITY_DEPTH=10
+HOMOZYG_WINDOW_SIZE=1000
+HETEROZYG_CALLS=10
 
 JAVA=$(which java)
 PERL=$(which perl)
@@ -28,7 +38,7 @@ export PERL5LIB=$PERL5LIB:$BINARY_DIR/bin/vcftools_0.1.10/perl/
 # Tag low-quality SNPs
 $JAVA 	-Xmx8G -jar $GATK \
 		-T VariantFiltration \
-		--filterExpression "QUAL < 30 || QD < 10" \
+		--filterExpression "QUAL < $MIN_VARIANT_QUALITY || QD < $MIN_QUALITY_DEPTH" \
 		--filterName "LowQD" \
 		--variant $INPUT_VCF \
 		-R $REFERENCE \
@@ -58,8 +68,8 @@ fi
 # Plink analysis
 $PLINK 	--file $SAMPLE_DIR/temp_sample \
 		--noweb --homozyg --homozyg-group \
-		--homozyg-window-kb 1000 \
-		--homozyg-window-het 10 \
+		--homozyg-window-kb $HOMOZYG_WINDOW_SIZE \
+		--homozyg-window-het $HETEROZYG_CALLS \
 		--out $SAMPLE_DIR/plink > /dev/null
 
 # # Put the plink log in the SGE job log file

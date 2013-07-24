@@ -6,5 +6,7 @@ http://genome.ucsc.edu/goldenPath/help/customTrack.html#SHARE
 	{% set track_link = "http://genome.ucsc.edu/cgi-bin/hgTracks?org=" + organism + "&position=" + genomic_position + "&hgt.customText=" + get_host_url() + "token/" + token + "/bed" %}
 	{% if return_link %}
 		<a href="{{ track_link }}" title="UCSC Annotation Track">{{ genomic_position }}</a>
+	{% else %}
+		track_link
 	{% endif %}
 {% endmacro %}
