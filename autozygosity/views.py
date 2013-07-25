@@ -45,24 +45,24 @@ def download_input(token):
 	except Exception, e:
 		abort(404)
 	else:
-		return send_file(submission.input_vcf_path, as_attachment=True)
+		return send_file(submission.input_vcf_path, as_attachment=True, attachment_filename=token + ".input.vcf")
 
 
 @check_download
 @app.route('/download/<token:token>/output', methods=['GET'])
 def download_output(token):
-	return send_file(get_submission(token).output_zip_path, as_attachment=True, mimetype="application/octet-stream")
+	return send_file(get_submission(token).output_zip_path, as_attachment=True, attachment_filename=token + ".output.zip", mimetype="application/octet-stream")
 
 
 @check_download
 @app.route('/download/<token:token>/output/vcf', methods=['GET'])
 def download_output_vcf(token):
-	return send_file(get_submission(token).output_vcf_path, as_attachment=True, mimetype="text/vcf")
+	return send_file(get_submission(token).output_vcf_path, as_attachment=True, attachment_filename=token + ".output.vcf",  mimetype="text/vcf")
 
 
 @app.route('/download/<token:token>/output/bed', methods=['GET'])
 def download_output_bed(token):
-	return send_file(get_submission(token).output_bed_path, as_attachment=True, mimetype="text/bed")
+	return send_file(get_submission(token).output_bed_path, as_attachment=True, attachment_filename=token + ".output.bed",  mimetype="text/bed")
 
 
 @app.route('/token/check', methods=['POST'])
@@ -100,21 +100,31 @@ def index():
 		submission_time = datetime.now()
 		submission_folder = submission_time.strftime('%Y-%m-%dT%H:%M:%S')
 
-		vcf_job = job(token=token, ip_address=request.remote_addr, submitted=submission_time)
-		vcf_job.save()
-
+		# Try to save a record of the submission
+		vcf_job = job(	token=token, 
+						ip_address=request.remote_addr, 
+						submitted=submission_time)
 		try:
-			upload = vcf_uploads.save(storage=request.files['vcf'], folder="".join([submission_folder, "-", token]), name="input.vcf")
+			vcf_job.save()
+		except Exception, e:
+			abort(500)
+
+		# Then try to save the submission itself
+		try:
+			upload = vcf_uploads.save(	storage=request.files['vcf'], 
+										folder="".join([submission_folder, "-", token]), 
+										name="input.vcf")
 		except Exception, e:
 			abort(500)
 		else:
 			session['last_token'] = token
 			return redirect("/token/" + token)
 
-	elif request.method == 'POST' and token_form.validate():
-		token(request.form['token'])
+	elif request.method == 'GET':
+		return render_template("index.html", submission_form=submission_form, token_form=token_form)
 
-	return render_template("index.html", submission_form=submission_form, token_form=token_form)
+	else:
+		abort(500)
 
 
 @app.route('/favicon.ico')

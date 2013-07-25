@@ -5,11 +5,11 @@ from autozygosity import app
 from helpers import *
 from settings import *
 
-from mongoengine import Document, StringField, DateTimeField, ListField, queryset_manager
+from mongoengine import Document, StringField, DateTimeField, ListField, IntField, queryset_manager
 from flask.ext.mongoengine.wtf import model_form
 
 from flask.ext.wtf import Form, FileField, TextField, validators
-from wtforms import TextField, ValidationError
+from wtforms import TextField, IntegerField, ValidationError
 
 
 class job(Document):
@@ -19,6 +19,12 @@ class job(Document):
 	submitted  = DateTimeField(required=True)
 	started    = DateTimeField(required=False)
 	finished   = DateTimeField(required=False)
+
+	min_variant_quality = IntField(min_value=0, max_value=99, default=30)
+	min_quality_depth = IntField(min_value=0, default=10)
+	homozyg_window_size = IntField(min_value=0, default=1000)
+	heterozyg_calls = IntField(min_value=0, default=10)
+
 	meta = {
 		'indexes': ['token'],
 		'ordering': ['+submitted']
@@ -84,10 +90,15 @@ class joblog:
 class job_form(Form):
 	vcf = FileField(u'Image File', [validators.Required(message = u'You must specify a file')])
 
+	min_variant_quality = IntegerField(u'Minimum Variant Quality', [validators.NumberRange(min=0, max=99)], default=30)
+	min_quality_depth = IntegerField(u'Minimum Quality by Depth', [validators.NumberRange(min=0)], default=10)
+	homozyg_window_size = IntegerField(u'Homozygosity Window Size', [validators.NumberRange(min=0)], default=1000)
+	heterozyg_calls = IntegerField(u'Heterozygous Calls allowed in window', [validators.NumberRange(min=0)], default=10)
+
 	def validate_vcf(form, field):
 		m = re.match('^.*\.(' + '|'.join(permute_case('vcf')) + ')$', field.data.filename)
 		if not m:
-			raise ValidationError('You must upload a VCF file')
+			raise ValidationError(u'You must upload a VCF file')
 
 
 class check_form(Form):
@@ -96,5 +107,5 @@ class check_form(Form):
 	def validate_token(form, field):
 		m = re.match(app.config['TOKEN_REGEX'], field.data)
 		if not m:
-			raise ValidationError('You must supply a valid token')
+			raise ValidationError(u'You must supply a valid token')
 			

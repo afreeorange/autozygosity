@@ -1,6 +1,27 @@
 <p class="pagination-centered">
 	<span class="label {{ submission.status|jinja_filter_status_class }}">{{ submission.status }}</span>
 </p>
+<table class="table table-bordered table-condensed" id="token-analysis-params">
+	<tbody>
+		<tr>
+			<th scope="row">Minimum Variant Quality</th>
+			<td>{{ submission.min_variant_quality|jinja_filter_add_number_commas }}</td>
+		</tr>
+		<tr>
+			<th scope="row">Minimum Quality by Depth</th>
+			<td>{{ submission.min_quality_depth|jinja_filter_add_number_commas }}</td>
+		</tr>
+		<tr>
+			<th scope="row">Homozygosity Window Size</th>
+			<td>{{ submission.homozyg_window_size|jinja_filter_add_number_commas }}</td>
+		</tr>
+		<tr>
+			<th scope="row">Heterozygous Calls Allowed in Window</th>
+			<td>{{ submission.heterozyg_calls|jinja_filter_add_number_commas }}</td>
+		</tr>
+	</tbody>
+</table>
+<br />
 <p class="pagination-centered">
 	<span class="token-timestamps">Submitted {{ submission.submitted|jinja_filter_human_timestamp }}</span>
 	{% if submission.started %}

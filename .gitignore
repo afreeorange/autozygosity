@@ -10,3 +10,4 @@ local
 logs
 .Python
 uploads/*
+misc/yui/*

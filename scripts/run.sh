@@ -21,7 +21,6 @@ BEDTOOLS=$BINARY_DIR/bin/bedtools/bin/
 
 INPUT_VCF=$1
 SAMPLE_DIR=$(dirname $INPUT_VCF)
-TOKEN=$(basename $INPUT_VCF)
 
 # Run parameters
 MIN_VARIANT_QUALITY=30

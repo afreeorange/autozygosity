@@ -1,0 +1,16 @@
+<div class="fileupload fileupload-new" data-provides="fileupload">
+	<div class="input-append">
+		<div class="uneditable-input span5">
+			<i class="icon-file fileupload-exists"></i> 
+			<span class="fileupload-preview"></span>
+		</div>
+		<span class="hide-after-submit btn btn-file">
+			<span class="fileupload-new"><i class="icon-file"></i> Select a file</span>
+			<span class="hide-after-submit fileupload-exists"><i class="icon-repeat"></i> Change</span>
+			{{ submission_form.vcf(id="vcf") }}
+		</span>
+		<a href="#" class="btn hide-after-submit fileupload-exists" data-dismiss="fileupload"><i class="icon-remove-circle"></i> Remove</a>
+		<button type="submit" id="submit" class="btn btn-success">Submit <i class="icon-chevron-right icon-white"></i></button>
+	</div>
+</div>
+<span id="vcfupload-messages" class="label label-important label-error">{{ error }}</span>	

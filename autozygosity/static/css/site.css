@@ -119,3 +119,27 @@ text-align: left!important;
 .sorting_asc { background: url('../img/datatables/sort_asc.png') no-repeat center left; }
 .sorting_desc { background: url('../img/datatables/sort_desc.png') no-repeat center left; }
 .align-left { background-position: right; } 
+
+#table-analysis-params {
+font-size: small;
+}
+#table-analysis-params th {
+}
+
+#token-analysis-params {
+margin: 0 auto;
+font-size: small;
+width: 550px;
+}
+#token-analysis-params th {
+width: 50%;
+text-align: right;
+}
+#token-analysis-params input {
+padding:0;
+margin:0;
+}
+.token-analysis-params-index {
+margin: 10px 0 !important;
+width: 520px !important;
+}

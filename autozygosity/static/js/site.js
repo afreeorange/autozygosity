@@ -1,7 +1,5 @@
 $(function () {
 
-	/* Can consolidate a lot but readability is paramount, and space (and bandwidth) are cheap. */
-
 	// Custom token validator
 	$.validator.addMethod("validtoken", function( value, element ) {
 		var result = this.optional(element) || /^[a-z]{5,15}$/.test(value);
@@ -83,6 +81,20 @@ $(function () {
 			// Could be missing something. This will have to do for now.
 			window.location.href = "/token/" + xhr.getResponseHeader('token');
 		}
+	});
+
+	// Analysis tuning
+	$('#tune-analysis').click(function(){
+		$('#token-analysis-params').fadeToggle();
+	});
+	$('#min_variant_quality').slider({
+		min: 0,
+		max: 99,
+		step: 1,
+		value: 30,
+		tooltip: "hide"
+	}).on('slide', function(ev) {
+		$('#min_variant_quality-value').html(ev.value);
 	});
 
 });

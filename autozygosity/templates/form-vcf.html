@@ -1,25 +1,34 @@
 <h3>To get started, give me <a href="http://www.1000genomes.org/node/101" title="The VCF Format">a VCF file</a></h3>
+
+<p><em>You may <a id="tune-analysis" href="javascript://" title="Customize analysis parameters">customize the default analysis parameters</a> before you begin</em></p>
+
+<table class="table table-bordered table-condensed token-analysis-params-index hide" id="token-analysis-params">
+	<tbody>
+		<tr>
+			<th scope="row">Minimum Variant Quality</th>
+			<td>{{ submission_form.min_variant_quality(class="span3") }} <span id="min_variant_quality-value">{{ submission_form.min_variant_quality.default }}</span></td>
+		</tr>
+		<tr>
+			<th scope="row">Minimum Quality by Depth</th>
+			<td>{{ submission_form.min_quality_depth(class="span3") }}</td>
+		</tr>
+		<tr>
+			<th scope="row">Homozygosity Window Size</th>
+			<td>{{ submission_form.homozyg_window_size(class="span3") }}</td>
+		</tr>
+		<tr>
+			<th scope="row">Heterozygous Calls Allowed in Window</th>
+			<td>{{ submission_form.heterozyg_calls(class="span3") }}</td>
+		</tr>
+	</tbody>
+</table>
+
 <form id="vcfupload" action="/" method="POST" enctype="multipart/form-data">
 	{{ submission_form.csrf_token }}
 
-	<div class="fileupload fileupload-new" data-provides="fileupload">
-		<div class="input-append">
-			<div class="uneditable-input span5">
-				<i class="icon-file fileupload-exists"></i> 
-				<span class="fileupload-preview"></span>
-			</div>
-			<span class="hide-after-submit btn btn-file">
-				<span class="fileupload-new"><i class="icon-file"></i> Select a file</span>
-				<span class="hide-after-submit fileupload-exists"><i class="icon-repeat"></i> Change</span>
-				{{ submission_form.vcf(id="vcf") }}
-			</span>
-			<a href="#" class="btn hide-after-submit fileupload-exists" data-dismiss="fileupload"><i class="icon-remove-circle"></i> Remove</a>
-			<button type="submit" id="submit" class="btn btn-success">Submit <i class="icon-chevron-right icon-white"></i></button>
-		</div>
-		<br />
-		<span id="vcfupload-messages" class="label label-important label-error">{{ error }}</span>
-	</div>
+	{% include "blocks/block-vcf-upload.html" %}
 
+	{# Start progress bar #}
 	<div class="row" id="visual-progress" style="display:none;">
 		<div class="span11">
 			<div id="progress" class="progress progress-success progress-striped active">
@@ -31,21 +40,12 @@
 		</div>
 	</div>
 
+	{# Start upload information block #}
 	<div class="row">
-		<div class="span7">
-			<small>
-				<ul>
-					<li>Uploads are limited to <strong>100MB</strong>.</li>
-					<li>You'll get an <strong>upload token</strong> on submission. <br /><strong>Please write it down!</strong> You'll use it to check on your job later.</li>
-					<li>All submission files and results are <strong>removed after 10 days</strong>.</li>
-					<li>Jobs are processed in the order in which they are submitted.</li>
-					<li>There's no limit on the number of analyses you can request.</li>
-				</ul>
-			</small>
-		</div>
-		<div class="span5">
-			{% include "block-demo.html" %}
-		</div>
-	</div>
 
+		{% include "blocks/block-upload-info.html" %}
+
+		{% include "blocks/block-demo.html" %}
+		
+	</div>
 </form>
