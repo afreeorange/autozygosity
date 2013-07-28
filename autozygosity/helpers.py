@@ -85,12 +85,13 @@ def validate_download(function):
 
 def jinja_method_explain_submission():
 	""" Jinja2 method to determine whether or not to show submission explanation.
-		Aimed at first-time visitors.
+		Aimed at first-time visitors. Assume first-time visitor if the 
+		'explain_submission' cookie's not set.
 	"""
 	try:
 		return session['explain_submission']
 	except Exception, e:
-		pass
+		return True
 
 
 def jinja_method_get_hostname():

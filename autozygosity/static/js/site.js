@@ -12,10 +12,11 @@ $(function () {
 	// progress. I wanted it to go to the submission target
 	// (/token/{token}), but couldn't make this work. Hence
 	// added window.location.href. Downside is that this is
-	// a POST and GET in sequence, so using sessions wouldn't
-	// work.
+	// a POST and GET in sequence, so using a session helper
+	// wouldn't work.
 	$('#no-token-explanation').click(function(){
-		console.log("HAHA");
+		$.get('/misc/no_explanation');
+		$('#token-explanation').slideUp();
 	});
 
 	// $.get('/misc/allowed_upload_extensions', function(data) {

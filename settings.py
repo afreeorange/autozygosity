@@ -1,6 +1,6 @@
 from datetime import datetime
 
-PROJECT_PATH = "/Users/nikhil/Dropbox/autozygosity/" # Trailing slash required!
+PROJECT_PATH = "/Users/nikhil/Desktop/autozygosity/" # Trailing slash required!
 HOST="0.0.0.0"
 PORT=5000
 DEBUG = True

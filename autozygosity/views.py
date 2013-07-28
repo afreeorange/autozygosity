@@ -77,7 +77,8 @@ def index():
 	submission_form = job_form()
 	token_form = check_form()
 
-	session['explain_submission'] = True
+	if 'explain_submission' not in session:
+		session['explain_submission'] = True
 
 	if request.method == 'POST' and submission_form.validate():
 		token = generate_token()
