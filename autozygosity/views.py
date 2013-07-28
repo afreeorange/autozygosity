@@ -8,85 +8,67 @@ from models import job, job_form, check_form
 from helpers import *
 import socket
 
-# Custom error pages
+
 @app.errorhandler(404)
 def page_not_found(e):
+	""" Custom 404 error page """
 	return render_template('error-404.html'), 404
 
 
 @app.errorhandler(500)
 def page_not_found(e):
+	""" Custom 500 error page """
 	return render_template('error-500.html'), 500
 
 
-def check_download(function):
-	""" 
-	Decorator for download functions. When used, ensures 
-	(1) a valid token, and
-	(2) that the results are ready for download 
-	"""
-	def decorator(*args, **kwargs):
-		try:
-			submission = job.objects(token__contains = kwargs['token'].lower())[0]
-		except IndexError, e:
-			abort(404)
-		else:
-			try:
-				with open(submission.output_zip_path): pass
-			except IOError, e:
-				return render_template('error-unavailable.html', token=submission.token)
-	return decorator
-
-
-@app.route('/download/<token:token>/input', methods=['GET'])
-def download_input(token):
-	try:
-		submission = job.objects(token__contains = token.lower())[0]
-	except Exception, e:
-		abort(404)
-	else:
-		return send_file(submission.input_vcf_path, as_attachment=True, attachment_filename=token + ".input.vcf")
-
-
-@check_download
-@app.route('/download/<token:token>/output', methods=['GET'])
+@app.route('/token/<token:token>/output', methods=['GET'])
+@validate_download
+@validate_token
 def download_output(token):
 	return send_file(get_submission(token).output_zip_path, as_attachment=True, attachment_filename=token + ".output.zip", mimetype="application/octet-stream")
 
 
-@check_download
-@app.route('/download/<token:token>/output/vcf', methods=['GET'])
+@app.route('/token/<token:token>/output/vcf', methods=['GET'])
+@validate_download
+@validate_token
 def download_output_vcf(token):
 	return send_file(get_submission(token).output_vcf_path, as_attachment=True, attachment_filename=token + ".output.vcf",  mimetype="text/vcf")
 
 
-@app.route('/download/<token:token>/output/bed', methods=['GET'])
+@app.route('/token/<token:token>/output/bed', methods=['GET'])
+@validate_download
+@validate_token
 def download_output_bed(token):
 	return send_file(get_submission(token).output_bed_path, as_attachment=True, attachment_filename=token + ".output.bed",  mimetype="text/bed")
 
 
+@app.route('/token/<token:token>/input', methods=['GET'])
+@validate_download
+@validate_token
+def download_input(token):
+	return send_file(get_submission(token).input_vcf_path, as_attachment=True, attachment_filename=token + ".input.vcf")
+
+
 @app.route('/token/check', methods=['POST'])
 @app.route('/token/<token:token>', methods=['GET'])
+@validate_token
 def token(token = None):
 	if request.method == 'POST':
 		token = request.form['token']
-	print socket.gethostname()
-	print socket.getfqdn()
+
+	bed_data = []
+	submission = job.objects(token__contains = token.lower())[0]
+
 	try:
-		submission = job.objects(token__contains = token.lower())[0]
+		with open(submission.output_bed_path) as file:
+			for line in file:
+				bed_data.append(tuple(line.split()))
 	except Exception, e:
-		abort(404)
-	else:
-		bed_data = []
-		try:
-			with open(submission.output_bed_path) as file:
-				for line in file:
-					bed_data.append(tuple(line.split()))
-		except Exception, e:
-			pass
-		resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data))
-		resp.headers.add('token', token) # Need this for JQuery form plugin redirect
-		return resp
+		pass
+
+	resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data))
+	resp.headers.add('token', token) # Need this for JQuery form plugin redirect
+	return resp
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -94,6 +76,8 @@ def token(token = None):
 def index():
 	submission_form = job_form()
 	token_form = check_form()
+
+	session['explain_submission'] = True
 
 	if request.method == 'POST' and submission_form.validate():
 		token = generate_token()
@@ -125,6 +109,19 @@ def index():
 
 	else:
 		abort(500)
+
+
+@app.route('/misc/allowed_upload_extensions')
+def allowed_extensions():
+	""" Returns allowed upload extensions. Used by Javascript. Overkill. """
+	return "|".join(app.config['UPLOAD_FORMAT_EXTENSIONS'])
+
+
+@app.route('/misc/no_explanation', methods=['GET'])
+def no_explanation():
+	""" Returns allowed upload extensions. Used by Javascript. Overkill. """
+	session['explain_submission'] = False
+	return str(session['explain_submission'])
 
 
 @app.route('/favicon.ico')

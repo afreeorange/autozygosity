@@ -29,7 +29,7 @@ except ConnectionError, e:
 
 from autozygosity import views, models, helpers
 app.jinja_env.globals.update(get_host_url=helpers.jinja_method_get_hostname)
-app.jinja_env.globals.update(first_time_visitor=helpers.jinja_method_first_time_check)
+app.jinja_env.globals.update(explain_submission=helpers.jinja_method_explain_submission)
 
 if __name__ == '__main__':
 	app.run()

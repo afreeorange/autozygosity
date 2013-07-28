@@ -17,7 +17,7 @@ PLINK=$BINARY_DIR/bin/plink/plink
 TABIX=$BINARY_DIR/bin/tabix/
 BEDTOOLS=$BINARY_DIR/bin/bedtools/bin/
 
-### Don't touch anything else.
+### Don't touch anything else. You're safe now, Timmy.
 
 INPUT_VCF=$1
 SAMPLE_DIR=$(dirname $INPUT_VCF)
@@ -105,7 +105,7 @@ fi
 gunzip $SAMPLE_DIR/plink_ROH.bed.gz
 mv $SAMPLE_DIR/plink_ROH.bed $SAMPLE_DIR/output.bed
 
-# Change chr23 to chrX (Plink!!)
+# Change chr23 to chrX (Else UCSC won't like file. Plink!!)
 sed -i 's/chr23/chrX/' $SAMPLE_DIR/output.bed
 
 # Compress output files

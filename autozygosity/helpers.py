@@ -1,9 +1,10 @@
-import string
+from datetime import datetime
+from functools import wraps
+from socket import getfqdn
 import itertools
 import random
 import re
-from socket import getfqdn
-from datetime import datetime
+import string
 
 from autozygosity import app
 import models
@@ -21,13 +22,75 @@ class TokenConverter(BaseConverter):
 app.url_map.converters['token'] = TokenConverter
 
 
-def jinja_method_first_time_check():
-	""" Jinja2 method to track first-time visitors """
-	if 'first_time' not in session:
-		session['first_time'] = True
-	else:
-		session['first_time'] = False
-	return session['first_time']
+def validate_token(function):
+	""" Decorator that checks if given token exists in database """
+
+	# wraps solved a silly/bizzare problem where function.__name__
+	# would always return the last decorated method in this file.
+	# Still don't understand why that should be the case. Need to
+	# read more
+	# http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
+	# http://www.artima.com/weblogs/viewpost.jsp?thread=240808
+	@wraps(function)
+	def validate_token_decorator(*args, **kwargs):
+
+		# Token either comes from URI or POST variable.
+		# Barf if neither.
+		token = None
+		if 'token' in kwargs:
+			token = kwargs['token']
+		elif 'token' in request.form:
+			token = request.form['token']
+		else:
+			abort(500)
+
+		# Check if valid token
+		try:
+			models.job.objects(token__contains = token.lower())[0]
+		except IndexError, e:
+			abort(404)
+		else:
+			return function(*args, **kwargs)
+
+	return validate_token_decorator
+
+
+def validate_download(function):
+	""" Decorator that checks if a submission's files are
+		available for download. Throws a 404 if the submission
+		is completed but file is unavailable for whatever reason.
+		Shows appropriate pages for 'completed' and 'failed'
+		statuses, and "results not ready" for all others.
+	"""	
+
+	@wraps(function)
+	def validate_download_decorator(*args, **kwargs):
+		submission = models.job.objects(token__contains = kwargs['token'].lower())[0]
+
+		try:
+			function(*args, **kwargs)
+		except Exception, e:
+			print str(e)
+			if submission.status == 'completed':
+				abort(404)
+			elif submission.status == 'failed':
+				return render_template('token.html', submission=submission)
+			else:
+				return render_template('error-unavailable.html', token=submission.token)
+		else:
+			return function(*args, **kwargs)
+
+	return validate_download_decorator
+
+
+def jinja_method_explain_submission():
+	""" Jinja2 method to determine whether or not to show submission explanation.
+		Aimed at first-time visitors.
+	"""
+	try:
+		return session['explain_submission']
+	except Exception, e:
+		pass
 
 
 def jinja_method_get_hostname():
@@ -147,20 +210,7 @@ def generate_token(wordcount=2, digitcount=0):
 			token += str(int(random.random()*numbermax))
 	return token
 
-
-def permute_case(input_string):
-	""" 
-	Return all possible case permutations for a given input string
-	http://stackoverflow.com/a/6792898 
-	"""
-	if not input_string:
-		yield ""
-	else:
-		first = input_string[:1]
-		if first.lower() == first.upper():
-			for sub_casing in permute_case(input_string[1:]):
-				yield first + sub_casing
-		else:
-			for sub_casing in permute_case(input_string[1:]):
-				yield first.lower() + sub_casing
-				yield first.upper() + sub_casing
+@app.template_filter()
+def make_comma_list(list):
+	return ", ".join(list)
+ 

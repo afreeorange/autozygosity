@@ -88,7 +88,7 @@ class joblog:
 
 
 class job_form(Form):
-	vcf = FileField(u'Image File', [validators.Required(message = u'You must specify a file')])
+	vcf = FileField(u'VCF File', [validators.Required(message = u'You must specify a file')])
 
 	min_variant_quality = IntegerField(u'Minimum Variant Quality', [validators.NumberRange(min=0, max=99)], default=30)
 	min_quality_depth = IntegerField(u'Minimum Quality by Depth', [validators.NumberRange(min=0)], default=10)
@@ -96,9 +96,9 @@ class job_form(Form):
 	heterozyg_calls = IntegerField(u'Heterozygous Calls allowed in window', [validators.NumberRange(min=0)], default=10)
 
 	def validate_vcf(form, field):
-		m = re.match('^.*\.(' + '|'.join(permute_case('vcf')) + ')$', field.data.filename)
+		m = re.match('^.*\.(' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$', field.data.filename, re.IGNORECASE)
 		if not m:
-			raise ValidationError(u'You must upload a VCF file')
+			raise ValidationError(u'You must upload a VCF file (compressed options are .zip, .gz, .tgz, and .tar.gz)')
 
 
 class check_form(Form):

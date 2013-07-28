@@ -3,7 +3,7 @@ Make a UCSC annotation track
 http://genome.ucsc.edu/goldenPath/help/customTrack.html#SHARE
 #}
 {% macro make_ucsc_track(token="", organism="human", genomic_position="chr1", return_link=True) %}
-	{% set track_link = "http://genome.ucsc.edu/cgi-bin/hgTracks?org=" + organism + "&position=" + genomic_position + "&hgt.customText=" + get_host_url() + "token/" + token + "/bed" %}
+	{% set track_link = "http://genome.ucsc.edu/cgi-bin/hgTracks?org=" + organism + "&position=" + genomic_position + "&hgt.customText=" + get_host_url() + "token/" + token + "/output/bed" %}
 	{% if return_link %}
 		<a href="{{ track_link }}" title="UCSC Annotation Track">{{ genomic_position }}</a>
 	{% else %}
