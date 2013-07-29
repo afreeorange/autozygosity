@@ -9,7 +9,7 @@ This project is the public, anonymous, token-based front end to the analysis too
 ### Web Server
 
 * A *NIX server with the `bash` interpreter
-* `unzip`, `tar`, `unrar`, `unrar`, `bunzip`, `bunzip2`
+* `unzip`, `tar`, `unrar`, `unrar`, `bunzip2`
 * Python 2.7
 * Java 1.7
 * Perl
@@ -35,6 +35,8 @@ This project is the public, anonymous, token-based front end to the analysis too
 * Modify `settings.py` to suit your environment.
 * Look at `scripts/run.sh` to configure paths to the genomic analysis tools required.
 * Make sure that `client_max_body_size` is set to whatever you limit your upload sizes to in Nginx's `http {…}` section. 
+* Place a sample VCF file called "`sample.vcf`" in `autozygosity/static/`
+* Go through the `configs/` folder to install cron and logrotate entries.
 
 Once you've taken care of these, you can start the server:
 
@@ -49,7 +51,7 @@ If you want a Flask server for testing,
 
 	./start flask
 
-It's highly recommended that you set `DEBUG = False` in `settings.py` and use Nginx as a reverse proxy to Gunicorn. See the "misc" folder for a sample configuration.
+It's highly recommended that you set `DEBUG = False` in `settings.py` and use Nginx as a reverse proxy to Gunicorn. See the `configs/` folder for a sample configuration.
 
 ## License
 

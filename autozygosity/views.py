@@ -88,7 +88,6 @@ def index():
 		session['explain_submission'] = True
 
 	if request.method == 'POST' and submission_form.validate():
-	# if request.method == 'POST':
 		token = generate_token()
 		submission_time = datetime.now()
 		submission_folder = submission_time.strftime('%Y-%m-%dT%H:%M:%S')

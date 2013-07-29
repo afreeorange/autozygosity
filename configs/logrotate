@@ -1,0 +1,15 @@
+# Logrotate configuration sample. Keep 12 months-worth
+# of logs. Compress older logs.
+
+ /opt/autozygosity/logs/analysis.log {
+     monthly
+     rotate 12
+     dateext
+     compress
+ 
+     nomail
+     missingok
+     notifempty
+     delaycompress
+ }
+

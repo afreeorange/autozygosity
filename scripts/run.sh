@@ -72,26 +72,26 @@ case $EXTRACTABLE in
 	*.zip)
 		unzip $EXTRACTABLE 
 		;;
-	*.tar.bz2)
-		tar -xvjf $EXTRACTABLE
-		;;
-	*.bz2)
-		bunzip2 $EXTRACTABLE 
+	*.tar)
+		tar -xvf $EXTRACTABLE
 		;;
 	*.tar.gz)
+		tar -xvzf $EXTRACTABLE
+		;;
+	*.tgz)
 		tar -xvzf $EXTRACTABLE
 		;;
 	*.gz)
 		gunzip $EXTRACTABLE 
 		;;
-	*.tbz2)
+	*.tar.bz)
 		tar -xvjf $EXTRACTABLE
 		;;
-	*.tgz)
-		tar -xvzf $EXTRACTABLE
+	*.tbz)
+		tar -xvjf $EXTRACTABLE
 		;;
-	*.tar)
-		tar -xvf $EXTRACTABLE
+	*.bz)
+		bunzip2 $EXTRACTABLE 
 		;;
 	*)  
 		echo -e "$EXTRACTABLE is probably not an archive." 
@@ -104,7 +104,8 @@ esac
 if [[ $IS_ARCHIVE -eq 0 ]]; then
 	INPUT_VCF=$UPLOADED_VCF
 else
-	INPUT_VCF=$(find $SAMPLE_DIR/extraction_temp -type f -depth 1 | head -1)
+	# Two things of concern: dot-files and "__MACOSX" folders
+	INPUT_VCF=$(find $SAMPLE_DIR/extraction_temp -type f ! -iname ".*" ! -iname $(basename $UPLOADED_VCF) | head -1)
 	if [[ $INPUT_VCF == "" ]]; then
 		echo -e "$UPLOADED_VCF is an archive but not in the expected format."
 		exit 100
@@ -121,16 +122,16 @@ echo -e "HETEROZYG_CALLS: $HETEROZYG_CALLS"
 # ------- Actual analysis begins here -------
 
 # Tag low-quality SNPs
-$JAVA 	-Xmx8G -jar $GATK \
+$JAVA   -Xmx8G -jar $GATK \
 		-T VariantFiltration \
 		--filterExpression "QUAL < $MIN_VARIANT_QUALITY || QD < $MIN_QUALITY_DEPTH" \
 		--filterName "LowQD" \
-		REFERENCE variant $INPUT_VCF \
+		--variant $INPUT_VCF \
 		-R $REFERENCE \
 		-o $SAMPLE_DIR/QDfilter.vcf
 
 if [ $? -ne 0 ]; then
-	20 -e "! Tagging failed on $INPUT_VCF";
+	echo -e "! Tagging failed on $INPUT_VCF";
 	exit 200
 fi
 
@@ -146,7 +147,7 @@ mv $SAMPLE_DIR/temp_sample.map $SAMPLE_DIR/temp_sample.map.old
 sed "s/chr//" $SAMPLE_DIR/temp_sample.map.old > $SAMPLE_DIR/temp_sample.map
 
 if [ $? -ne 0 ]; then
-	30 -e "! VCFtools failed on $INPUT_VCF";
+	echo -e "! VCFtools failed on $INPUT_VCF";
 	exit 300
 fi
 
@@ -161,7 +162,7 @@ $PLINK 	--file $SAMPLE_DIR/temp_sample \
 # cat $SAMPLE_DIR/plink.log
 
 if [ $? -ne 0 ]; then
-	40 -e "! Plink analysis failed on $INPUT_VCF";
+	echo -e "! Plink analysis failed on $INPUT_VCF";
 	exit 400
 fi
 
@@ -172,19 +173,19 @@ $TABIX/bgzip $SAMPLE_DIR/plink_ROH.bed
 $TABIX/tabix -p bed $SAMPLE_DIR/plink_ROH.bed.gz
 
 if [ $? -ne 0 ]; then
-	50 -e "! Tabix failed on $INPUT_VCF";
+	echo -e "! Tabix failed on $INPUT_VCF";
 	exit 500
 fi
 
 # Annotate the original VCF with the identified regions
-gz PERL -I $TABIX/perl $VCFTOOLS/vcf-annotate $INPUT_VCF \
+$PERL -I $TABIX/perl $VCFTOOLS/vcf-annotate $INPUT_VCF \
 		-a $SAMPLE_DIR/plink_ROH.bed.gz \
 		-c CHROM,FROM,TO,INFO/PLINK_HOM_KB,- \
 		-d "key=INFO,ID=PLINK_HOM_KB,Number=A,Type=Float,Description='Length of region of autozygosity in kb'" \
 		> $SAMPLE_DIR/output.ROH.vcf
 
 if [ $? -ne 0 ]; then
-	60 -e "! Annotation failed on $INPUT_VCF";
+	echo -e "! Annotation failed on $INPUT_VCF";
 	exit 600
 fi
 
@@ -199,4 +200,4 @@ cd $SAMPLE_DIR
 zip output.zip output.ROH.vcf output.bed
 
 # Clean up
-rm $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/input.vcf.idx $SAMPLE_DIR/extraction_temp/
+rm -rf $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/input.vcf.idx $SAMPLE_DIR/extraction_temp/

@@ -62,6 +62,7 @@ def analyze():
 			submission.status = 'completed'
 		finally:
 			submission.finished = datetime.now()
+			print submission.finished, "Finished", submission.token
 			submission.save()
 
 

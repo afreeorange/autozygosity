@@ -12,7 +12,7 @@ COPYRIGHT_MESSAGE = """
 <br />
 Email <a href="mailto:nikhil-anand@uiowa.edu">Nikhil Anand</a> with any questions, issues, or bugs (especially bugs.)
 <br />
-Source <a href="https://github.com/afreeorange/autozygosity" title="Project source code at Github">at GitHub</a>. 
+Source <a href="https://github.com/afreeorange/autozygosity" title="Project source code at Github">at GitHub</a>
 """
 SUBMISSION_RETENTION_DAYS=10
 
@@ -29,4 +29,4 @@ STATUS_MAP = dict(zip(JOB_STATUSES, STATUS_CLASSES))
 CSRF_ENABLED = True
 SECRET_KEY = "8MfeRORkN74/dsXMW/78BeLOu1yquSw7"
 TOKEN_REGEX = r'[a-zA-Z]{5,15}'
-UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'zip', 'gz', 'tgz', 'tbz', 'tbz2', 'tar.gz', 'tar.bz', 'tar.bz2']
+UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'rar', 'zip', 'tar', 'tar.gz', 'tgz', 'gz', 'tar.bz', 'tbz', 'bz']
