@@ -29,4 +29,4 @@ STATUS_MAP = dict(zip(JOB_STATUSES, STATUS_CLASSES))
 CSRF_ENABLED = True
 SECRET_KEY = "8MfeRORkN74/dsXMW/78BeLOu1yquSw7"
 TOKEN_REGEX = r'[a-zA-Z]{5,15}'
-UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'zip', 'gz', 'tgz', 'tar.gz']
+UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'zip', 'gz', 'tgz', 'tbz', 'tbz2', 'tar.gz', 'tar.bz', 'tar.bz2']

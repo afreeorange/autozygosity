@@ -20,6 +20,8 @@ class job(Document):
 	started    = DateTimeField(required=False)
 	finished   = DateTimeField(required=False)
 
+	upload_name = StringField(required=True, default="input.vcf")
+
 	min_variant_quality = IntField(min_value=0, max_value=99, default=30)
 	min_quality_depth = IntField(min_value=0, default=10)
 	homozyg_window_size = IntField(min_value=0, default=1000)
@@ -48,7 +50,7 @@ class job(Document):
 
 	@property
 	def input_vcf_path(self):
-		return '/'.join([self.full_upload_path, 'input.vcf'])
+		return '/'.join([self.full_upload_path, self.upload_name])
 
 	@property
 	def output_bed_path(self):
@@ -62,6 +64,9 @@ class job(Document):
 	def output_zip_path(self):
 		return '/'.join([self.full_upload_path, 'output.zip'])
 
+	@property
+	def logfile_path(self):
+		return '/'.join([self.full_upload_path, 'analysis.log'])
 
 
 # Don't really use this anywhere right now. Maybe a future release :)

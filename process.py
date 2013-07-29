@@ -12,6 +12,7 @@ from shutil import rmtree
 from subprocess import check_call, CalledProcessError
 from sys import exit
 from time import sleep
+import shlex
 
 # Flask-script management instance
 manager = Manager(app)
@@ -46,7 +47,15 @@ def analyze():
 			submission.started = datetime.now()
 			submission.status = 'running'
 			submission.save()
-			check_call([analysis_script, submission.input_vcf_path])
+			print submission.started, "Starting", submission.token
+			check_call(	analysis_script + ' '
+						+ ' -i ' + submission.input_vcf_path
+						+ ' -v ' + str(submission.min_variant_quality)
+						+ ' -d ' + str(submission.min_quality_depth)
+						+ ' -w ' + str(submission.homozyg_window_size)
+						+ ' -c ' + str(submission.heterozyg_calls)
+						+ ' &> ' + submission.full_upload_path + '/analysis.log'
+						, shell=True)
 		except CalledProcessError, e:
 			submission.status = 'failed'
 		else:

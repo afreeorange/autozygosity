@@ -9,6 +9,7 @@ This project is the public, anonymous, token-based front end to the analysis too
 ### Web Server
 
 * A *NIX server with the `bash` interpreter
+* `unzip`, `tar`, `unrar`, `unrar`, `bunzip`, `bunzip2`
 * Python 2.7
 * Java 1.7
 * Perl

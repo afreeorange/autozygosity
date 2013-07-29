@@ -21,6 +21,12 @@ def page_not_found(e):
 	return render_template('error-500.html'), 500
 
 
+@app.route('/token/<token:token>/log', methods=['GET'])
+@validate_token
+def download_log(token):
+	return send_file(get_submission(token).logfile_path, as_attachment=True, attachment_filename=token + ".analysis.log", mimetype="application/octet-stream")
+
+
 @app.route('/token/<token:token>/output', methods=['GET'])
 @validate_download
 @validate_token
@@ -46,7 +52,8 @@ def download_output_bed(token):
 @validate_download
 @validate_token
 def download_input(token):
-	return send_file(get_submission(token).input_vcf_path, as_attachment=True, attachment_filename=token + ".input.vcf")
+	submission = get_submission(token)
+	return send_file(submission.input_vcf_path, as_attachment=True, attachment_filename=token + "." + submission.upload_name)
 
 
 @app.route('/token/check', methods=['POST'])
@@ -81,14 +88,32 @@ def index():
 		session['explain_submission'] = True
 
 	if request.method == 'POST' and submission_form.validate():
+	# if request.method == 'POST':
 		token = generate_token()
 		submission_time = datetime.now()
 		submission_folder = submission_time.strftime('%Y-%m-%dT%H:%M:%S')
+		extension = ""
+		savename = ""
+
+		print str(request.form)
+
+		# Try to get submission upload extension
+		try:
+			extension = re.compile(r'^.*?[.](?P<extension>' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$').match(request.files['vcf'].filename).group('extension')
+		except Exception, e:
+			abort(500) # jQuery and WTFoms validation should (hopefully) avoid this...
+		else:
+			savename = "input." + extension
 
 		# Try to save a record of the submission
 		vcf_job = job(	token=token, 
 						ip_address=request.remote_addr, 
-						submitted=submission_time)
+						submitted=submission_time,
+						upload_name=savename,
+						min_variant_quality=request.form['min_variant_quality'],
+						min_quality_depth=request.form['min_quality_depth'],
+						homozyg_window_size=request.form['homozyg_window_size'],
+						heterozyg_calls=request.form['heterozyg_calls'])
 		try:
 			vcf_job.save()
 		except Exception, e:
@@ -98,13 +123,16 @@ def index():
 		try:
 			upload = vcf_uploads.save(	storage=request.files['vcf'], 
 										folder="".join([submission_folder, "-", token]), 
-										name="input.vcf")
+										name=savename)
 		except Exception, e:
 			abort(500)
 		else:
 			session['last_token'] = token
-			return redirect("/token/" + token)
-
+			if token != 'null':
+				return redirect("/token/" + token)
+			else:
+				abort(500)
+			
 	elif request.method == 'GET':
 		return render_template("index.html", submission_form=submission_form, token_form=token_form)
 

@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config.from_object('settings')
 
 # Configure uploads
-vcf_uploads = UploadSet(name = 'vcf', extensions = ('vcf'))
+vcf_uploads = UploadSet(name = 'vcf', extensions = tuple(app.config['UPLOAD_FORMAT_EXTENSIONS']))
 configure_uploads(app, vcf_uploads)
 patch_request_class(app, app.config['UPLOADED_VCF_MAX_SIZE']) # 100MB max upload size
 

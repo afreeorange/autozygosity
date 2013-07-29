@@ -3,24 +3,31 @@
 # Calculate the regions of autozygosity in a multi-sample VCF and annotate it with those regions
 # Uses plink to define regions of >1MB containing <=2 het snps per 1MB sliding window
 
-# Adam DeLuca  <adam-deluca@uiowa.edu>
-# Nikhil Anand <nikhil-anand@uiowa.edu>
-
+# Original script by Adam DeLuca  <adam-deluca@uiowa.edu>
+# Adapted for web interface by Nikhil Anand <nikhil-anand@uiowa.edu>
 
 ### Edit these!
 
 BINARY_DIR="/home/adeluca"
-REFERENCE=$BINARY_DIR/ref/hg19.fa
-GATK=$BINARY_DIR/bin/gatk-master/dist/GenomeAnalysisTK.jar
-VCFTOOLS=$BINARY_DIR/bin/vcftools/bin/
-PLINK=$BINARY_DIR/bin/plink/plink
-TABIX=$BINARY_DIR/bin/tabix/
+JAVA=$(which java)
+PERL=$(which perl)
+
 BEDTOOLS=$BINARY_DIR/bin/bedtools/bin/
+GATK=$BINARY_DIR/bin/gatk-master/dist/GenomeAnalysisTK.jar
+PLINK=$BINARY_DIR/bin/plink/plink
+REFERENCE=$BINARY_DIR/ref/hg19.fa
+TABIX=$BINARY_DIR/bin/tabix/
+VCFTOOLS=$BINARY_DIR/bin/vcftools/bin/
+
+export PATH=$PATH:$TABIX:/usr/java/latest/bin/
+export PERL5LIB=$PERL5LIB:$BINARY_DIR/bin/vcftools/perl/
 
 ### Don't touch anything else. You're safe now, Timmy.
 
-INPUT_VCF=$1
-SAMPLE_DIR=$(dirname $INPUT_VCF)
+IS_ARCHIVE=1
+SAMPLE_DIR=""
+UPLOADED_VCF=""
+INPUT_VCF=""
 
 # Run parameters
 MIN_VARIANT_QUALITY=30
@@ -28,23 +35,102 @@ MIN_QUALITY_DEPTH=10
 HOMOZYG_WINDOW_SIZE=1000
 HETEROZYG_CALLS=10
 
-JAVA=$(which java)
-PERL=$(which perl)
+while getopts ":i:v:d:w:c:" opt; do
+	case $opt in
+		i)
+			UPLOADED_VCF=$OPTARG
+			;;
+		v)
+			MIN_VARIANT_QUALITY=$OPTARG
+			;;
+		d)
+			MIN_QUALITY_DEPTH=$OPTARG
+			;;
+		w)
+			HOMOZYG_WINDOW_SIZE=$OPTARG
+			;;
+		c)
+			HETEROZYG_CALLS=$OPTARG
+			;;
+	esac
+done
+SAMPLE_DIR=$(dirname $UPLOADED_VCF)
 
-export PATH=$PATH:/usr/java/latest/bin/:$BINARY_DIR/bin/tabix-0.2.6/
-export PERL5LIB=$PERL5LIB:$BINARY_DIR/bin/vcftools_0.1.10/perl/
+# Now try to extract the file with some filesystem gymnastics
+
+echo -e "Trying to extract $UPLOADED_VCF"
+mkdir -p $SAMPLE_DIR/extraction_temp
+cp $UPLOADED_VCF $SAMPLE_DIR/extraction_temp/
+cd $SAMPLE_DIR/extraction_temp/
+EXTRACTABLE=$SAMPLE_DIR/extraction_temp/$(basename $UPLOADED_VCF)
+echo -e "Copied to $EXTRACTABLE"
+
+case $EXTRACTABLE in
+	*.rar)
+		unrar x $EXTRACTABLE 
+		;;
+	*.zip)
+		unzip $EXTRACTABLE 
+		;;
+	*.tar.bz2)
+		tar -xvjf $EXTRACTABLE
+		;;
+	*.bz2)
+		bunzip2 $EXTRACTABLE 
+		;;
+	*.tar.gz)
+		tar -xvzf $EXTRACTABLE
+		;;
+	*.gz)
+		gunzip $EXTRACTABLE 
+		;;
+	*.tbz2)
+		tar -xvjf $EXTRACTABLE
+		;;
+	*.tgz)
+		tar -xvzf $EXTRACTABLE
+		;;
+	*.tar)
+		tar -xvf $EXTRACTABLE
+		;;
+	*)  
+		echo -e "$EXTRACTABLE is probably not an archive." 
+		IS_ARCHIVE=0
+		;;
+esac
+
+# If uploaded VCF is not an archive, get the first extracted file.
+# Website provides caveats about compressed uploads, but people can be 'funny'.
+if [[ $IS_ARCHIVE -eq 0 ]]; then
+	INPUT_VCF=$UPLOADED_VCF
+else
+	INPUT_VCF=$(find $SAMPLE_DIR/extraction_temp -type f -depth 1 | head -1)
+	if [[ $INPUT_VCF == "" ]]; then
+		echo -e "$UPLOADED_VCF is an archive but not in the expected format."
+		exit 100
+	fi
+fi
+
+echo -e "Input VCF is $INPUT_VCF"
+
+echo -e "MIN_VARIANT_QUALITY: $MIN_VARIANT_QUALITY"
+echo -e "MIN_QUALITY_DEPTH: $MIN_QUALITY_DEPTH"
+echo -e "HOMOZYG_WINDOW_SIZE: $HOMOZYG_WINDOW_SIZE"
+echo -e "HETEROZYG_CALLS: $HETEROZYG_CALLS"
+
+# ------- Actual analysis begins here -------
 
 # Tag low-quality SNPs
 $JAVA 	-Xmx8G -jar $GATK \
 		-T VariantFiltration \
 		--filterExpression "QUAL < $MIN_VARIANT_QUALITY || QD < $MIN_QUALITY_DEPTH" \
 		--filterName "LowQD" \
-		--variant $INPUT_VCF \
+		REFERENCE variant $INPUT_VCF \
 		-R $REFERENCE \
 		-o $SAMPLE_DIR/QDfilter.vcf
 
 if [ $? -ne 0 ]; then
-	echo -e "! Tagging failed on $INPUT_VCF";
+	20 -e "! Tagging failed on $INPUT_VCF";
 	exit 200
 fi
 
@@ -60,8 +146,8 @@ mv $SAMPLE_DIR/temp_sample.map $SAMPLE_DIR/temp_sample.map.old
 sed "s/chr//" $SAMPLE_DIR/temp_sample.map.old > $SAMPLE_DIR/temp_sample.map
 
 if [ $? -ne 0 ]; then
-    echo -e "! VCFtools failed on $INPUT_VCF";
-    exit 300
+	30 -e "! VCFtools failed on $INPUT_VCF";
+	exit 300
 fi
 
 # Plink analysis
@@ -75,8 +161,8 @@ $PLINK 	--file $SAMPLE_DIR/temp_sample \
 # cat $SAMPLE_DIR/plink.log
 
 if [ $? -ne 0 ]; then
-    echo -e "! Plink analysis failed on $INPUT_VCF";
-    exit 400
+	40 -e "! Plink analysis failed on $INPUT_VCF";
+	exit 400
 fi
 
 # Format plink output as a BED file
@@ -86,20 +172,20 @@ $TABIX/bgzip $SAMPLE_DIR/plink_ROH.bed
 $TABIX/tabix -p bed $SAMPLE_DIR/plink_ROH.bed.gz
 
 if [ $? -ne 0 ]; then
-    echo -e "! Tabix failed on $INPUT_VCF";
-    exit 500
+	50 -e "! Tabix failed on $INPUT_VCF";
+	exit 500
 fi
 
 # Annotate the original VCF with the identified regions
-$PERL 	-I $TABIX/perl $VCFTOOLS/vcf-annotate $INPUT_VCF \
+gz PERL -I $TABIX/perl $VCFTOOLS/vcf-annotate $INPUT_VCF \
 		-a $SAMPLE_DIR/plink_ROH.bed.gz \
 		-c CHROM,FROM,TO,INFO/PLINK_HOM_KB,- \
 		-d "key=INFO,ID=PLINK_HOM_KB,Number=A,Type=Float,Description='Length of region of autozygosity in kb'" \
 		> $SAMPLE_DIR/output.ROH.vcf
 
 if [ $? -ne 0 ]; then
-    echo -e "! Annotation failed on $INPUT_VCF";
-    exit 600
+	60 -e "! Annotation failed on $INPUT_VCF";
+	exit 600
 fi
 
 gunzip $SAMPLE_DIR/plink_ROH.bed.gz
@@ -113,4 +199,4 @@ cd $SAMPLE_DIR
 zip output.zip output.ROH.vcf output.bed
 
 # Clean up
-rm $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/input.vcf.idx
+rm $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/input.vcf.idx $SAMPLE_DIR/extraction_temp/

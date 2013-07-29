@@ -8,29 +8,29 @@
 	You may also <a id="tune-analysis" href="javascript://" title="Customize analysis parameters">customize the default analysis parameters</a> before you begin.
 </p>
 
-<table class="table table-bordered table-condensed token-analysis-params-index hide" id="token-analysis-params">
-	<tbody>
-		<tr>
-			<th scope="row">Minimum Variant Quality</th>
-			<td>{{ submission_form.min_variant_quality(class="span3") }} <span id="min_variant_quality-value">{{ submission_form.min_variant_quality.default }}</span></td>
-		</tr>
-		<tr>
-			<th scope="row">Minimum Quality by Depth</th>
-			<td>{{ submission_form.min_quality_depth(class="span3") }}</td>
-		</tr>
-		<tr>
-			<th scope="row">Homozygosity Window Size</th>
-			<td>{{ submission_form.homozyg_window_size(class="span3") }}</td>
-		</tr>
-		<tr>
-			<th scope="row">Heterozygous Calls Allowed in Window</th>
-			<td>{{ submission_form.heterozyg_calls(class="span3") }}</td>
-		</tr>
-	</tbody>
-</table>
-
 <form id="vcfupload" action="/" method="POST" enctype="multipart/form-data">
 	{{ submission_form.csrf_token }}
+
+	<table class="table table-bordered table-condensed token-analysis-params-index hide" id="token-analysis-params">
+		<tbody>
+			<tr>
+				<th scope="row">Minimum Variant Quality</th>
+				<td>{{ submission_form.min_variant_quality(class="span3") }} <span id="min_variant_quality-value">{{ submission_form.min_variant_quality.default }}</span></td>
+			</tr>
+			<tr>
+				<th scope="row">Minimum Quality by Depth</th>
+				<td>{{ submission_form.min_quality_depth(class="span3") }}</td>
+			</tr>
+			<tr>
+				<th scope="row">Homozygosity Window Size</th>
+				<td>{{ submission_form.homozyg_window_size(class="span3") }}</td>
+			</tr>
+			<tr>
+				<th scope="row">Heterozygous Calls Allowed in Window</th>
+				<td>{{ submission_form.heterozyg_calls(class="span3") }}</td>
+			</tr>
+		</tbody>
+	</table>
 
 	{% include "blocks/block-vcf-upload.html" %}
 
