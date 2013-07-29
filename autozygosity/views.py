@@ -95,8 +95,6 @@ def index():
 		extension = ""
 		savename = ""
 
-		print str(request.form)
-
 		# Try to get submission upload extension
 		try:
 			extension = re.compile(r'^.*?[.](?P<extension>' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$').match(request.files['vcf'].filename).group('extension')
