@@ -34,7 +34,7 @@ $(function () {
 		var re = new RegExp("^.*.\.(" + allowed_extensions + ")$","i");
 		var result = this.optional(element) || re.test(value);
 		return result;
-	}, "You need to upload a VCF file. It should end in '.vcf'");
+	}, "You need to upload a raw VCF file or any one of the supported compression formats. File extension is important.");
 
 	// Validate token-check form before submission
 	$("#tokencheck").validate({
@@ -60,11 +60,47 @@ $(function () {
 			vcf: {
 				required: true,
 				vcfextension: true
+			},
+			min_variant_quality: {
+				required: true,
+				min: 0,
+				digits: true
+			},
+			min_quality_depth: {
+				required: true,
+				min: 0,
+				digits: true
+			},
+			homozyg_window_size: {
+				required: true,
+				min: 0,
+				digits: true
+			},
+			heterozyg_calls: {
+				required: true,
+				min: 0,
+				digits: true
 			}
 		},
 		messages: {
 			vcf: {
 				required: "You need to specify an input file"
+			},
+			min_variant_quality: {
+				required: "You need to specify minimum variant quality",
+				digits: "All values need to be integers"
+			},
+			min_quality_depth: {
+				required: "You need to specify proper quality depth",
+				digits: "All values need to be integers"
+			},
+			homozyg_window_size: {
+				required: "You need to specify proper homozygosity window size",
+				digits: "All values need to be integers"
+			},
+			heterozyg_calls: {
+				required: "You need to specify proper number of heterozygous calls allowed in window",
+				digits: "All values need to be integers"
 			}
 		},
 		errorContainer: '#vcfupload-messages',
