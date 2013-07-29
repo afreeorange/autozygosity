@@ -48,7 +48,7 @@ def analyze():
 			submission.status = 'running'
 			submission.save()
 			print submission.started, "Starting", submission.token
-			check_call(	analysis_script + ' '
+			check_call(analysis_script + ' '
 						+ ' -i ' + submission.input_vcf_path
 						+ ' -v ' + str(submission.min_variant_quality)
 						+ ' -d ' + str(submission.min_quality_depth)

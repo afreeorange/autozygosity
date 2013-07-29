@@ -49,7 +49,7 @@ margin: 0 0 10px 10px;
 .dotted {
 border-bottom: 1px dotted #CCC;
 }
-#vcfupload ul li {
+small ul li {
 list-style-image: url('/static/img/bullet.png');
 }
 #download-sample span,

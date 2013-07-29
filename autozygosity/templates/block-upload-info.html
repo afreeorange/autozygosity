@@ -1,8 +1,7 @@
 <div class="span7">
 	<small>
 		<ul>
-			<li>Supported file extensions are <strong>{{ config.UPLOAD_FORMAT_EXTENSIONS|make_comma_list }}</strong>. </li>
-            <li><strong>If compressed</strong>, your upload should contain a <em>single</em> VCF file at <em>zero depth</em> when extracted (i.e., don't put your VCF input inside a folder before you compress).</li>
+			<li>Supported file extensions are <strong>{{ config.UPLOAD_FORMAT_EXTENSIONS|make_comma_list }}</strong>. <strong>If compressed</strong>, your upload should contain a <em>single</em> VCF file at <em>zero depth</em> when extracted (i.e., don't put your VCF input inside a folder before you compress).</li>
 			<li>Uploads are limited to <strong>100MB</strong>.</li>
 			<li>Jobs are processed in the order in which they are submitted.</li>
 			<li>There's no limit on the number of analyses you can request.</li>

@@ -36,7 +36,7 @@ $(function () {
 		return result;
 	}, "You need to upload a raw VCF file or any one of the supported compression formats. File extension is important.");
 
-	// Validate token-check form before submission
+	// Validate token-check form
 	$("#tokencheck").validate({
 		rules: {
 			token: {
@@ -55,6 +55,30 @@ $(function () {
 		wrapper: ""
 	});
 
+	// Validate token-check form before submission
+	$("#urisubmit").validate({
+		rules: {
+			uri: {
+				required: true,
+				url: true
+			}
+		},
+		messages: {
+			uri: {
+				required: "You need to supply a URI",
+				url: "You need to supply a valid URI (e.g. no localhost)"
+			}
+		},
+		errorContainer: '#urisubmit-messages',
+		errorLabelContainer: '#urisubmit-messages',
+		errorElement: "span",
+		wrapper: "",
+		submitHandler: function(form) {
+			$(form).ajaxSubmit();
+		}
+	});
+
+	// Validate VCF upload form
 	$("#vcfupload").validate({
 		rules: {
 			vcf: {
@@ -107,6 +131,12 @@ $(function () {
 		errorLabelContainer: '#vcfupload-messages',
 		errorElement: "span",
 		wrapper: ""
+	});
+
+
+	$('#urisubmit').submit(function() {
+		$('#uri-info').html('Attempting to fetch remote file. Hang on&hellip;');
+		$('#uri-submit').attr('disabled', 'disabled');
 	});
 
 	// Upload progress bar

@@ -114,3 +114,5 @@ class check_form(Form):
 		if not m:
 			raise ValidationError(u'You must supply a valid token')
 			
+class uri_submit_form(Form):
+	uri = TextField(u'VCF URI', [validators.required(message = u'You must specify a URI'), validators.URL(message = u'You must specify a valid URI (e.g. "localhost" is not allowed)')])

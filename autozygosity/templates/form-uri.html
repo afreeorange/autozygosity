@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="span7">
+		<h3>Submit via URI</h3>
+		<form id="urisubmit" action="/misc/urisubmit" method="POST" enctype="multipart/form-data">
+			{{ uri_form.csrf_token }}
+			<span id="urisubmit-messages" class="label label-important label-error"></span>
+			<div class="input-append">
+				{{ uri_form.uri(class="span5", required="required") }}
+				<button id="uri-submit" type="submit" class="btn btn-success">Go  <i class="icon-chevron-right icon-white"></i></button>
+			</div>
+			<small id="uri-info"></small>
+		</form>
+	</div>
+	<div class="span5">
+		<small>
+			<ul>
+				<li>You can link to a raw VCF file or any compatible compression format.</li>
+				<li>If you specify a remote file without an extension, I'll assume it's in VCF format.</li>
+			</ul>
+		</small>
+	</div>
+</div>

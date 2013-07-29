@@ -6,7 +6,19 @@
 
 	<p>This homozygosity mapping tool can retain the region containing the disease-causing variant in a consanguineous pedigree, while eliminating XXX% of identified variants from consideration.</p>
 
-	{% include "form-vcf.html" %}
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#tab-upload" data-toggle="tab">Upload file</a></li>
+		<li><a href="#tab-uri" data-toggle="tab">Submit via URI</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab-upload">
+			{% include "form-vcf.html" %}
+		</div>
+		<div class="tab-pane" id="tab-uri">
+			{% include "form-uri.html" %}
+		</div>
+	</div>
 
 	<hr />
 
