@@ -1,11 +1,11 @@
 from datetime import datetime
 
-PROJECT_PATH = "/Users/nikhil/Desktop/autozygosity/" # Trailing slash required!
+PROJECT_PATH = "/Users/nikhil/Dropbox/autozygosity/" # Trailing slash required!
 HOST="0.0.0.0"
 PORT=5000
 DEBUG = True
 
-PROJECT_NAME = "Homozygosity Mapping"
+PROJECT_NAME = "Test Project"
 MONGODB_SETTINGS = {'DB': "autozygosity", 'PORT': 27017}
 COPYRIGHT_MESSAGE = """
 &copy """ + datetime.now().strftime("%Y") + """ <a href="http://genome.uiowa.edu">The Center for Bioinformatics &amp; Computational Biology</a> at <a href="http://www.uiowa.edu">The University of Iowa</a>

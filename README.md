@@ -37,6 +37,7 @@ This project is the public, anonymous, token-based front end to the analysis too
 * Make sure that `client_max_body_size` is set to whatever you limit your upload sizes to in Nginx's `http {…}` section. 
 * Place a sample VCF file called "`sample.vcf`" in `autozygosity/static/`
 * Go through the `configs/` folder to install cron and logrotate entries.
+* Run `make build`
 
 Once you've taken care of these, you can start the server:
 

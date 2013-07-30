@@ -8,8 +8,7 @@ from lockfile.pidlockfile import PIDLockFile
 from autozygosity import app
 from settings import *
 
-# Run flask or gunicorn depending on options
-# Default is gunicorn
+# Run flask or gunicorn depending on options. Default is gunicorn.
 if len(sys.argv) == 2 and sys.argv[1] == "flask":
     from autozygosity import app
     app.run(host = HOST, debug = True, port = PORT)

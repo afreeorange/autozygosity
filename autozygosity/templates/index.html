@@ -14,7 +14,7 @@
 
 	<h3>To get started, give me <a href="http://www.1000genomes.org/node/101" title="The VCF Format">a VCF file</a></h3>
 
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs" id="navigation">
 		<li class="active"><a href="#tab-upload" data-toggle="tab">Upload file</a></li>
 		<li><a href="#tab-uri" data-toggle="tab">Submit via URI</a></li>
 		<li><a href="#tab-params" data-toggle="tab">Customize Analysis</a></li>
@@ -45,7 +45,7 @@
 				</div>
 
 				{# Error messages #}
-				<span id="vcfupload-messages" class="label label-important label-error">{% for error in submission_form.vcf.errors %}{{ error }}{% endfor %}</span>
+				<span id="vcf-error-messages" class="label label-important label-error">{% for error in submission_form.vcf.errors %}{{ error }}{% endfor %}</span>
 
 				{# Progress bar #}
 				<div class="row" id="visual-progress" style="display:none;">
@@ -88,15 +88,21 @@
 
 				<div class="row">
 					<div class="span7">
-						<span id="urisubmit-messages" class="label label-important label-error">{% for error in submission_form.uri.errors %}{{ error }}{% endfor %}</span>
+						<span id="uri-error-messages" class="label label-important label-error">{% for error in submission_form.vcf.errors %}{{ error }}{% endfor %}</span>
 						<div class="input-append">
 							{{ submission_form.uri(class="span5") }}
 							<button id="uri-submit" type="submit" class="btn btn-success">Go <i class="icon-chevron-right icon-white"></i></button>
 						</div>
 						<br />
-						<small id="uri-info">E.g. http://www.example.com/input.vcf</small>
+						<small id="uri-example">
+							<strong>E.g.</strong> <code>http://www.example.com/input.vcf</code>
+							<span style="display:none;">
+								<br />
+								<img src="/static/img/wait.gif" /> Attempting to fetch remote file. This might take a while depending on size and connection speed.
+							</span>
+						</small>
 					</div>
-					<div class="span5">
+					<div class="span5" id="uri-info">
 						<small>
 							You can link to a raw VCF file or any compatible compression format.
 							<br />

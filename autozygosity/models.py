@@ -104,8 +104,6 @@ def make_optional(other_field):
 
 		# If the other field has data
 		if bool(_other_field.data):
-			print "Found data in", str(_other_field)
-			print "Halting validation on", str(field)
 			raise StopValidation()
 
 	return _make_optional

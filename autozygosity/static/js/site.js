@@ -1,3 +1,15 @@
+// Keep users from fiddling with tabs or buttons on form submit
+function disable_interaction() {
+	$('button').each(function() {
+		$(this).hide();
+		// URI upload doesn't like this for some reason
+		// $(this).attr('disabled', 'disabled');
+	});
+	$('#navigation > li > a').each(function() {
+		$(this).removeAttr('data-toggle');
+	});
+}
+
 $(function () {
 
 	// Gets a regex-compatible list of allowed extensions.
@@ -51,60 +63,88 @@ $(function () {
 		wrapper: ""
 	});
 
-	// // Validate VCF upload form
-	// $("#vcfupload").validate({
-	// 	rules: {
-	// 		vcf: {
-	// 			required: true,
-	// 			validextensions: true
-	// 		},
-	// 		min_variant_quality: {
-	// 			required: true,
-	// 			min: 0,
-	// 			digits: true
-	// 		},
-	// 		min_quality_depth: {
-	// 			required: true,
-	// 			min: 0,
-	// 			digits: true
-	// 		},
-	// 		homozyg_window_size: {
-	// 			required: true,
-	// 			min: 0,
-	// 			digits: true
-	// 		},
-	// 		heterozyg_calls: {
-	// 			required: true,
-	// 			min: 0,
-	// 			digits: true
-	// 		}
-	// 	},
-	// 	messages: {
-	// 		vcf: {
-	// 			required: "You need to specify an input file"
-	// 		},
-	// 		min_variant_quality: {
-	// 			required: "You need to specify minimum variant quality",
-	// 			digits: "All values need to be integers"
-	// 		},
-	// 		min_quality_depth: {
-	// 			required: "You need to specify proper quality depth",
-	// 			digits: "All values need to be integers"
-	// 		},
-	// 		homozyg_window_size: {
-	// 			required: "You need to specify proper homozygosity window size",
-	// 			digits: "All values need to be integers"
-	// 		},
-	// 		heterozyg_calls: {
-	// 			required: "You need to specify proper number of heterozygous calls allowed in window",
-	// 			digits: "All values need to be integers"
-	// 		}
-	// 	},
-	// 	errorContainer: '#vcfupload-messages',
-	// 	errorLabelContainer: '#vcfupload-messages',
-	// 	errorElement: "span",
-	// 	wrapper: ""
-	// });
+	var valid_uri = false;
+
+	// Validate VCF upload form
+	$("#vcfupload").validate({
+		rules: {
+			vcf: {
+				required: function() {
+					return $('#uri').val() == '';
+				},
+				validextensions: true
+			},
+			uri: {
+				required: function() {
+					return $('#vcf').val() == '';
+				},
+				url: true
+			},
+			min_variant_quality: {
+				required: true,
+				min: 0,
+				digits: true
+			},
+			min_quality_depth: {
+				required: true,
+				min: 0,
+				digits: true
+			},
+			homozyg_window_size: {
+				required: true,
+				min: 0,
+				digits: true
+			},
+			heterozyg_calls: {
+				required: true,
+				min: 0,
+				digits: true
+			}
+		},
+		messages: {
+			vcf: {
+				validextensions: "You need to specify a valid input file"
+			},
+			uri: {
+				url: "You need to specify a valid URI"
+			},
+			min_variant_quality: {
+				required: "You need to specify minimum variant quality",
+				digits: "All values need to be integers"
+			},
+			min_quality_depth: {
+				required: "You need to specify proper quality depth",
+				digits: "All values need to be integers"
+			},
+			homozyg_window_size: {
+				required: "You need to specify proper homozygosity window size",
+				digits: "All values need to be integers"
+			},
+			heterozyg_calls: {
+				required: "You need to specify proper number of heterozygous calls allowed in window",
+				digits: "All values need to be integers"
+			}
+		},
+		errorPlacement: function($error, $element) {
+			var name = $element.attr("name");
+			$("#" + name + "-error-messages").append($error);
+		},
+		errorElement: "span",
+		wrapper: "",
+		success: function() {
+			$('.label-error').hide();
+			valid_uri = true;
+		}
+	});
+
+	// Show the download message only when (a) URI is valid, (b) submission happens
+	$('#uri-submit').click(function() {
+		if (valid_uri) {
+			disable_interaction();
+			$('#uri-example > span').show();
+		};
+	});
+
 
 	// Upload progress bar
 	var bar = $('.bar');
@@ -113,31 +153,37 @@ $(function () {
 
 	percent.html('0%');
 
-	$('#vcfupload').ajaxForm({
-		beforeSend: function() {
-			var percentVal = '0%';
-			bar.width(percentVal)
-			percent.html(percentVal);
+	// Trigger an Ajax submit only when the upload portion is submitted.
+	$('#submit').click(function(){
+		$('#vcfupload').ajaxForm({
+			beforeSend: function() {
+				var percentVal = '0%';
+				bar.width(percentVal)
+				percent.html(percentVal);
 
-			visual.slideDown();
-			$('.hide-after-submit').hide();
-			$('#submit').attr('disabled', 'disabled');
-			$('#token-submit').attr('disabled', 'disabled');
-		},
-		uploadProgress: function(event, position, total, percentComplete) {
-			var percentVal = percentComplete + '%';
-			bar.width(percentVal);
-			percent.html(percentVal);
-		},
-		complete: function(xhr) {
-			$('.hide-after-submit ').fadeOut();
+				visual.slideDown();
+				$('.hide-after-submit').hide();
+				// Keep users from fiddling with tabs or buttons on form submit
+				disable_interaction();
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+				var percentVal = percentComplete + '%';
+				bar.width(percentVal);
+				percent.html(percentVal);
+			},
+			complete: function(xhr) {
+				$('.hide-after-submit ').fadeOut();
 
-			// Here, I make Flask return a header with the submission token. This is
-			// because I couldn't figure out how to get the response URI (_not_ responseText)
-			// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
-			// Could be missing something. This will have to do for now.
-			window.location.href = "/token/" + xhr.getResponseHeader('token');
-		}
+				// Here, I make Flask return a header with the submission token. This is
+				// because I couldn't figure out how to get the response URI (_not_ responseText)
+				// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
+				// Could be missing something. This will have to do for now.
+				console.log(xhr.getAllResponseHeaders());
+				$('#tab-params').removeAttr('data-toggle');
+
+				window.location.href = "/token/" + xhr.getResponseHeader('token');
+			}
+		});
 	});
 
 	// Analysis tuning

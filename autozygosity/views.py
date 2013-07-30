@@ -138,8 +138,6 @@ def index():
 				except Exception, e:
 					abort(500)
 				else:
-
-					# Take user to token page
 					session['last_token'] = token
 					if token != 'null':
 						return redirect("/token/" + token)
@@ -148,7 +146,6 @@ def index():
 
 		# If URI not specified, deal with the VCF upload
 		elif request.files['vcf']:
-			print "Trying to save", request.files['vcf'].filename
 
 			# Try to get submission upload extension
 			try:
