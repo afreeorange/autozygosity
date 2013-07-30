@@ -29,7 +29,6 @@
 
 
 		Well, aren't _you_ the curious little kitten?
-		You might like this better:
 		https://github.com/afreeorange/autozygosity
 
 
@@ -75,9 +74,11 @@
 		<script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-fileupload.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/site.js') }}"></script>
+		{% if self.javascript() %}
 		<script type="text/javascript">
-		{% block javascript %}{% endblock %}
+			{% block javascript %}{% endblock %}
 		</script>
+		{% endif %}
 	</body>
 </html>
 

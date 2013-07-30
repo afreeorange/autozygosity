@@ -1,7 +1,7 @@
 $(function () {
 
-	// Gets a regex-compatible list of allowed extensions
-	// Probably overkill
+	// Gets a regex-compatible list of allowed extensions.
+	// Probably overkill.
 	allowed_extensions = ""
 	$.get('/misc/allowed_upload_extensions', function(data) {
 		allowed_extensions = data;
@@ -19,10 +19,6 @@ $(function () {
 		$('#token-explanation').slideUp();
 	});
 
-	// $.get('/misc/allowed_upload_extensions', function(data) {
-	// 	allowed_extensions = data;
-	// });
-
 	// Custom token validator
 	$.validator.addMethod("validtoken", function( value, element ) {
 		var result = this.optional(element) || /^[a-z]{5,15}$/.test(value);
@@ -30,7 +26,7 @@ $(function () {
 	}, "Your token's between 5 and 15 characters.<br />It doesn't have any numbers or strange characters.");
 
 	// Check file extension (doesn't mean it's a _valid_ VCF however...)
-	$.validator.addMethod("vcfextension", function( value, element ) {
+	$.validator.addMethod("validextensions", function( value, element ) {
 		var re = new RegExp("^.*.\.(" + allowed_extensions + ")$","i");
 		var result = this.optional(element) || re.test(value);
 		return result;
@@ -55,89 +51,60 @@ $(function () {
 		wrapper: ""
 	});
 
-	// Validate token-check form before submission
-	$("#urisubmit").validate({
-		rules: {
-			uri: {
-				required: true,
-				url: true
-			}
-		},
-		messages: {
-			uri: {
-				required: "You need to supply a URI",
-				url: "You need to supply a valid URI (e.g. no localhost)"
-			}
-		},
-		errorContainer: '#urisubmit-messages',
-		errorLabelContainer: '#urisubmit-messages',
-		errorElement: "span",
-		wrapper: "",
-		submitHandler: function(form) {
-			$(form).ajaxSubmit();
-		}
-	});
-
-	// Validate VCF upload form
-	$("#vcfupload").validate({
-		rules: {
-			vcf: {
-				required: true,
-				vcfextension: true
-			},
-			min_variant_quality: {
-				required: true,
-				min: 0,
-				digits: true
-			},
-			min_quality_depth: {
-				required: true,
-				min: 0,
-				digits: true
-			},
-			homozyg_window_size: {
-				required: true,
-				min: 0,
-				digits: true
-			},
-			heterozyg_calls: {
-				required: true,
-				min: 0,
-				digits: true
-			}
-		},
-		messages: {
-			vcf: {
-				required: "You need to specify an input file"
-			},
-			min_variant_quality: {
-				required: "You need to specify minimum variant quality",
-				digits: "All values need to be integers"
-			},
-			min_quality_depth: {
-				required: "You need to specify proper quality depth",
-				digits: "All values need to be integers"
-			},
-			homozyg_window_size: {
-				required: "You need to specify proper homozygosity window size",
-				digits: "All values need to be integers"
-			},
-			heterozyg_calls: {
-				required: "You need to specify proper number of heterozygous calls allowed in window",
-				digits: "All values need to be integers"
-			}
-		},
-		errorContainer: '#vcfupload-messages',
-		errorLabelContainer: '#vcfupload-messages',
-		errorElement: "span",
-		wrapper: ""
-	});
-
-
-	$('#urisubmit').submit(function() {
-		$('#uri-info').html('Attempting to fetch remote file. Hang on&hellip;');
-		$('#uri-submit').attr('disabled', 'disabled');
-	});
+	// // Validate VCF upload form
+	// $("#vcfupload").validate({
+	// 	rules: {
+	// 		vcf: {
+	// 			required: true,
+	// 			validextensions: true
+	// 		},
+	// 		min_variant_quality: {
+	// 			required: true,
+	// 			min: 0,
+	// 			digits: true
+	// 		},
+	// 		min_quality_depth: {
+	// 			required: true,
+	// 			min: 0,
+	// 			digits: true
+	// 		},
+	// 		homozyg_window_size: {
+	// 			required: true,
+	// 			min: 0,
+	// 			digits: true
+	// 		},
+	// 		heterozyg_calls: {
+	// 			required: true,
+	// 			min: 0,
+	// 			digits: true
+	// 		}
+	// 	},
+	// 	messages: {
+	// 		vcf: {
+	// 			required: "You need to specify an input file"
+	// 		},
+	// 		min_variant_quality: {
+	// 			required: "You need to specify minimum variant quality",
+	// 			digits: "All values need to be integers"
+	// 		},
+	// 		min_quality_depth: {
+	// 			required: "You need to specify proper quality depth",
+	// 			digits: "All values need to be integers"
+	// 		},
+	// 		homozyg_window_size: {
+	// 			required: "You need to specify proper homozygosity window size",
+	// 			digits: "All values need to be integers"
+	// 		},
+	// 		heterozyg_calls: {
+	// 			required: "You need to specify proper number of heterozygous calls allowed in window",
+	// 			digits: "All values need to be integers"
+	// 		}
+	// 	},
+	// 	errorContainer: '#vcfupload-messages',
+	// 	errorLabelContainer: '#vcfupload-messages',
+	// 	errorElement: "span",
+	// 	wrapper: ""
+	// });
 
 	// Upload progress bar
 	var bar = $('.bar');
@@ -174,9 +141,6 @@ $(function () {
 	});
 
 	// Analysis tuning
-	$('#tune-analysis').click(function(){
-		$('#token-analysis-params').fadeToggle();
-	});
 	$('#min_variant_quality').slider({
 		min: 0,
 		max: 99,

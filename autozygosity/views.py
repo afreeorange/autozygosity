@@ -5,9 +5,10 @@ from subprocess import check_call, CalledProcessError
 
 from flask import Flask, render_template, make_response, send_from_directory, request, session, redirect, url_for, abort, flash, send_file
 from autozygosity import app, vcf_uploads
-from models import job, job_form, check_form, uri_submit_form
+from models import job, job_form, check_form
 from helpers import *
 import socket
+from pprint import pprint
 
 
 @app.errorhandler(404)
@@ -84,117 +85,112 @@ def token(token = None):
 def index():
 	submission_form = job_form()
 	token_form = check_form()
-	uri_form = uri_submit_form()
 
+	# Deal with first-time visitors (show token explanation)
 	if 'explain_submission' not in session:
 		session['explain_submission'] = True
 
 	if request.method == 'POST' and submission_form.validate():
+
 		token = generate_token()
 		submission_time = datetime.now()
-		submission_folder = "".join([submission_time.strftime('%Y-%m-%dT%H:%M:%S'), "-", token])
+		submission_folder = "".join([app.config['UPLOADED_VCF_DEST'], submission_time.strftime('%Y-%m-%dT%H:%M:%S'), "-", token])
 		extension = ""
 		savename = ""
+		download_script = app.config['PROJECT_PATH'] + "scripts/download_uri.sh"
+		upload_log = app.config['PROJECT_PATH'] + 'logs/uploads.log'
 
-		# Try to get submission upload extension
-		try:
-			extension = re.compile(r'^.*?[.](?P<extension>' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$').match(request.files['vcf'].filename).group('extension')
-		except Exception, e:
-			abort(500) # jQuery and WTFoms validation should (hopefully) avoid this...
-		else:
-			savename = "input." + extension
+		# Prioritize URI location over upload for confused/naughty visitors
+		if request.form['uri']:
+			print "Trying", request.form['uri']
 
-		# Try to save a record of the submission
-		vcf_job = job(	token=token, 
-						ip_address=request.remote_addr, 
-						submitted=submission_time,
-						upload_name=savename,
-						min_variant_quality=request.form['min_variant_quality'],
-						min_quality_depth=request.form['min_quality_depth'],
-						homozyg_window_size=request.form['homozyg_window_size'],
-						heterozyg_calls=request.form['heterozyg_calls'])
-		try:
-			vcf_job.save()
-		except Exception, e:
-			abort(500)
-
-		# Then try to save the submission itself
-		try:
-			upload = vcf_uploads.save(	storage=request.files['vcf'], 
-										folder=submission_folder,
-										name=savename)
-		except Exception, e:
-			abort(500)
-		else:
-			session['last_token'] = token
-			if token != 'null':
-				return redirect("/token/" + token)
+			# Try to get submission upload extension
+			try:
+				extension = re.compile(r'^.*?[.](?P<extension>' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$').match(request.form['uri']).group('extension')
+			except Exception, e:
+				savename = "input.vcf" # Assume that URIs without extension are raw VCF
+				extension = "vcf"
 			else:
-				abort(500)
-			
-	elif request.method == 'GET':
-		return render_template("index.html", submission_form=submission_form, token_form=token_form, uri_form=uri_form)
+				savename = "input." + extension
 
-	else:
-		abort(500)
+			# Try downloading remote file.
+			try:
+				check_call(download_script + ' '
+							+ ' -u ' + request.form['uri']
+							+ ' -e ' + extension
+							+ ' -f ' + submission_folder
+							+ ' &> ' + upload_log
+							, shell=True)
+			except CalledProcessError, e:
+				return render_template("error-uri.html")
+			else:
+				# Try saving job if upload was successful
+				vcf_job = job(  token=token, 
+								ip_address=request.remote_addr, 
+								submitted=submission_time,
+								upload_name=savename,
+								min_variant_quality=request.form['min_variant_quality'],
+								min_quality_depth=request.form['min_quality_depth'],
+								homozyg_window_size=request.form['homozyg_window_size'],
+								heterozyg_calls=request.form['heterozyg_calls'])
+				try:
+					vcf_job.save()
+				except Exception, e:
+					abort(500)
+				else:
 
+					# Take user to token page
+					session['last_token'] = token
+					if token != 'null':
+						return redirect("/token/" + token)
+					else:
+						abort(500)
 
-@app.route('/misc/urisubmit', methods=['POST'])
-def submit_vcf_uri():
-	submission_form = job_form()
-	token_form = check_form()
-	uri_form = uri_submit_form()
+		# If URI not specified, deal with the VCF upload
+		elif request.files['vcf']:
+			print "Trying to save", request.files['vcf'].filename
 
-	download_script = app.config['PROJECT_PATH'] + "scripts/download_uri.sh"
-	upload_log = app.config['PROJECT_PATH'] + 'logs/uploads.log'
+			# Try to get submission upload extension
+			try:
+				extension = re.compile(r'^.*?[.](?P<extension>' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$').match(request.files['vcf'].filename).group('extension')
+			except Exception, e:
+				abort(500) # jQuery and WTFoms validation should (hopefully) avoid this...
+			else:
+				savename = "input." + extension
 
-	token = generate_token()
-	submission_time = datetime.now()
-	submission_folder = "".join([app.config['UPLOADED_VCF_DEST'], submission_time.strftime('%Y-%m-%dT%H:%M:%S'), "-", token])
-	extension = ""
-	savename = ""
-
-	if request.method == 'POST' and uri_form.validate():
-
-		# Try to get submission upload extension
-		try:
-			extension = re.compile(r'^.*?[.](?P<extension>' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$').match(request.form['uri']).group('extension')
-		except Exception, e:
-			savename = "input.vcf" # Assume that URIs without extension are raw VCF
-			extension = "vcf"
-		else:
-			savename = "input." + extension
-
-		# Try downloading remote file.
-		try:
-			check_call(download_script + ' '
-						+ ' -u ' + request.form['uri']
-						+ ' -e ' + extension
-						+ ' -f ' + submission_folder
-						+ ' &> ' + upload_log
-						, shell=True)
-		except CalledProcessError, e:
-			return render_template("error-uri.html")
-		else:
-			# Try saving job if upload was successful
-			vcf_job = job(	token=token, 
+			# Try to save a record of the submission
+			vcf_job = job(  token=token, 
 							ip_address=request.remote_addr, 
 							submitted=submission_time,
-							upload_name=savename)
+							upload_name=savename,
+							min_variant_quality=request.form['min_variant_quality'],
+							min_quality_depth=request.form['min_quality_depth'],
+							homozyg_window_size=request.form['homozyg_window_size'],
+							heterozyg_calls=request.form['heterozyg_calls'])
 			try:
 				vcf_job.save()
 			except Exception, e:
 				abort(500)
-			else:
 
-				# Take user to token page
+			# Then try to save the submission file itself
+			try:
+				upload = vcf_uploads.save(  storage=request.files['vcf'], 
+											folder=submission_folder,
+											name=savename)
+			except Exception, e:
+				abort(500)
+			else:
 				session['last_token'] = token
 				if token != 'null':
 					return redirect("/token/" + token)
 				else:
 					abort(500)
 
-	return render_template("index.html", submission_form=submission_form, token_form=token_form, uri_form=uri_form)
+		# If nothing, barf.
+		else:
+			abort(500)
+
+	return render_template("index.html", submission_form=submission_form, token_form=token_form)
 
 
 @app.route('/misc/allowed_upload_extensions')

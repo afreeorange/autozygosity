@@ -10,6 +10,7 @@ from flask.ext.mongoengine.wtf import model_form
 
 from flask.ext.wtf import Form, FileField, TextField, validators
 from wtforms import TextField, IntegerField, ValidationError
+from wtforms.validators import Optional, StopValidation
 
 
 class job(Document):
@@ -91,9 +92,28 @@ class joblog:
 		return self.logger
 
 
+def make_optional(other_field):
+	def _make_optional(form, field):
+
+		# Search the form for the "other field" object 
+		_other_field = form._fields.get(other_field)
+
+		# Check if the other field exists in form
+		if other_field is None:
+			raise Exception('No field named "%s" in form' % other_field)
+
+		# If the other field has data
+		if bool(_other_field.data):
+			print "Found data in", str(_other_field)
+			print "Halting validation on", str(field)
+			raise StopValidation()
+
+	return _make_optional
+
 
 class job_form(Form):
-	vcf = FileField(u'VCF File', [validators.Required(message = u'You must specify a file')])
+	vcf = FileField(u'VCF File', [make_optional('uri'), validators.required(message=u'You need to supply a VCF file')])
+	uri = TextField(u'VCF URI', [make_optional('vcf'), validators.URL(message = u'You must specify a valid URI (e.g. "localhost" is not allowed)')])
 
 	min_variant_quality = IntegerField(u'Minimum Variant Quality', [validators.NumberRange(min=0, max=99)], default=30)
 	min_quality_depth = IntegerField(u'Minimum Quality by Depth', [validators.NumberRange(min=0)], default=10)
@@ -103,7 +123,7 @@ class job_form(Form):
 	def validate_vcf(form, field):
 		m = re.match('^.*\.(' + '|'.join(app.config['UPLOAD_FORMAT_EXTENSIONS']) + ')$', field.data.filename, re.IGNORECASE)
 		if not m:
-			raise ValidationError(u'You must upload a VCF file (compressed options are .zip, .gz, .tgz, and .tar.gz)')
+			raise ValidationError(u'You must upload a VCF file (compressed or uncompressed)')
 
 
 class check_form(Form):
@@ -113,6 +133,3 @@ class check_form(Form):
 		m = re.match(app.config['TOKEN_REGEX'], field.data)
 		if not m:
 			raise ValidationError(u'You must supply a valid token')
-			
-class uri_submit_form(Form):
-	uri = TextField(u'VCF URI', [validators.required(message = u'You must specify a URI'), validators.URL(message = u'You must specify a valid URI (e.g. "localhost" is not allowed)')])

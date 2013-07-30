@@ -17,7 +17,7 @@ Source <a href="https://github.com/afreeorange/autozygosity" title="Project sour
 SUBMISSION_RETENTION_DAYS=10
 
 # Upload settings
-UPLOADED_VCF_DEST  = PROJECT_PATH + "uploads/"
+UPLOADED_VCF_DEST  = PROJECT_PATH + "uploads/" # Trailing slash required again, Suzy!
 UPLOADED_VCF_ALLOW = "vcf"
 UPLOADED_VCF_MAX_SIZE = 108 * 1024 * 1024
 
