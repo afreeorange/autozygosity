@@ -11,4 +11,3 @@ logs
 .Python
 uploads/*
 misc/yui/*
-*.min.js

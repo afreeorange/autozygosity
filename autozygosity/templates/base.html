@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-slider.min.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-fileupload.min.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/site.min.css') }}">
 		{% block head %}{% endblock %}
 
 		{% if self.styles() %}
@@ -73,7 +73,7 @@
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-fileupload.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/site.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/site.min.js') }}"></script>
 		{% if self.javascript() %}
 		<script type="text/javascript">
 			{% block javascript %}{% endblock %}

@@ -37,7 +37,6 @@ This project is the public, anonymous, token-based front end to the analysis too
 * Make sure that `client_max_body_size` is set to whatever you limit your upload sizes to in Nginx's `http {…}` section. 
 * Place a sample VCF file called "`sample.vcf`" in `autozygosity/static/`
 * Go through the `configs/` folder to install cron and logrotate entries.
-* Run `make build`
 
 Once you've taken care of these, you can start the server:
 
@@ -54,6 +53,35 @@ If you want a Flask server for testing,
 
 It's highly recommended that you set `DEBUG = False` in `settings.py` and use Nginx as a reverse proxy to Gunicorn. See the `configs/` folder for a sample configuration.
 
+## Screenshots
+
+[Dropbox link](https://www.dropbox.com/sh/xx6xzo1g9j23wrj/7m9s5K3iQP/autozygosity#/)
+
+## To do
+
+* Log errors
+* Better CSS selector-names
+* VCF validator
+* Progress indicator for URI download
+
 ## License
 
-See `LICENSE`
+Copyright 2013 Nikhil Anand <mail@nikhil.io> http://nikhil.io
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
