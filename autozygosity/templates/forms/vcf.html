@@ -1,0 +1,41 @@
+<form id="vcfupload" action="/" method="POST" enctype="multipart/form-data">
+	{{ submission_form.csrf_token }}
+
+	<div class="tab-content">
+
+		<div class="tab-pane active" id="tab-upload">
+
+			{% include "forms/blocks/vcf-upload.html" %}
+
+			<span id="vcf-error-messages" class="label label-important label-error">{% for error in submission_form.vcf.errors %}{{ error }}{% endfor %}</span>
+
+			{% include "forms/blocks/vcf-progress.html" %}
+
+			<div class="row">
+
+				<div class="span7">
+					{% include "forms/blocks/vcf-information.html" %}
+				</div>
+
+				{# Demo data #}
+				<div class="span5">
+					{% include "forms/blocks/vcf-sample.html" %}
+				</div>
+
+			</div>
+
+		</div>
+		<div class="tab-pane" id="tab-uri">
+
+			{% include "forms/blocks/vcf-uri.html" %}
+
+		</div>
+		<div class="tab-pane" id="tab-params">
+
+			{% include "forms/blocks/vcf-params.html" %}
+
+		</div>
+
+	</div>{# End tab-content #}
+
+</form>

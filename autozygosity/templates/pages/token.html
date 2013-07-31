@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+	{% if submission %}
+
+		<h1 id="token">{{ submission.token }}</h1>
+
+		{% if explain_submission(submission) %}
+			{% include "pages/blocks/token-explanation.html" %}	
+
+		{% else %}
+			{% if submission.status == 'submitted' %}
+				{% include "pages/blocks/token-submitted.html" %}
+
+			{% elif submission.status == 'running' %}
+				{% include "pages/blocks/token-running.html" %}
+
+			{% elif submission.status == 'completed' %}
+				{% include "pages/blocks/token-completed.html" %}
+
+			{% else %}
+				{% include "pages/blocks/token-failed.html" %}
+
+			{% endif %}
+		{% endif %}
+
+		<hr />
+
+		{% include "pages/blocks/token-meta.html" %}
+
+	{% else %}
+		
+		{% include "errors/token.html" %}
+
+	{% endif %}
+	
+{% endblock %}

@@ -1,0 +1,13 @@
+<h3>Have a token?</h3>
+<form id="tokencheck" action="/token/check" method="POST" enctype="multipart/form-data">
+	{{ token_form.csrf_token }}
+	<span id="tokencheck-messages" class="label label-important label-error"></span>
+	<div class="input-append">
+		{{ token_form.token(class="span5", required="required") }}
+		<button id="token-submit" type="submit" class="btn btn-success">Check  <i class="icon-chevron-right icon-white"></i></button>
+	</div>
+	{% if session['last_token'] %}
+	<br />
+	<small>Your most recent submission was called &#8220;<a id="last-submission" href="/token/{{ session['last_token'] }}">{{ session['last_token'] }}</a>&#8221;.</small>				
+	{% endif %}
+</form>

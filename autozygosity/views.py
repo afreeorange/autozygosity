@@ -15,14 +15,14 @@ from pprint import pprint
 @app.route('/misc/notfound')
 def page_not_found(e = None):
 	""" Custom 404 error page """
-	return render_template('error-404.html'), 404
+	return render_template('errors/404.html'), 404
 
 
 @app.errorhandler(500)
 @app.route('/misc/oops')
 def server_error(e = None):
 	""" Custom 500 error page """
-	return render_template('error-500.html'), 500
+	return render_template('errors/500.html'), 500
 
 
 @app.route('/token/<token:token>/log', methods=['GET'])
@@ -77,7 +77,7 @@ def token(token = None):
 	except Exception, e:
 		pass
 
-	resp = make_response(render_template("token.html", submission = submission, bed_data = bed_data))
+	resp = make_response(render_template("pages/token.html", submission = submission, bed_data = bed_data))
 	resp.headers.add('token', token) # Need this for JQuery form plugin redirect
 	return resp
 
@@ -124,7 +124,7 @@ def index():
 							+ ' &> ' + upload_log
 							, shell=True)
 			except CalledProcessError, e:
-				return render_template("error-uri.html")
+				return render_template("errors/uri.html")
 			else:
 				# Try saving job if upload was successful
 				vcf_job = job(  token=token, 
@@ -189,7 +189,7 @@ def index():
 		else:
 			abort(500)
 
-	return render_template("index.html", submission_form=submission_form, token_form=token_form)
+	return render_template("pages/index.html", submission_form=submission_form, token_form=token_form)
 
 
 @app.route('/misc/allowed_upload_extensions')

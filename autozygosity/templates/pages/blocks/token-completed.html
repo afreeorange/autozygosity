@@ -1,0 +1,57 @@
+{% from "_macros.html" import make_ucsc_track %}
+
+<div class="pagination-centered">
+	<h1 class="happy-face">:)</h1>
+	<h2>Your results are ready.</h2>
+	<p>
+		Exciting! Download them below.
+		<br />
+		<small>
+			Please note that these will be available for just 10 days
+			<br />
+			You can download <a href="/token/{{ submission.token }}/output/bed">the BED</a> and <a href="/token/{{ submission.token }}/output/vcf">VCF</a> outputs separately.
+		</small>
+	</p>
+
+	<div class="row">
+		<div class="span3 offset3">
+			<a href="/token/{{ submission.token }}/input" id="download-input"><span>Download your original VCF input file</span></a>
+		</div>
+		<div class="span3">
+			<a href="/token/{{ submission.token }}/output" id="download-results"><span>Download a zip archive of your results</span></a>
+		</div>
+	</div>
+</div>
+
+<hr />
+
+{% if bed_data %}
+<div class="pagination-centered">
+	<h3>BED file preview</h3>
+	<p>Click chromosomes for annotation tracks. Click headers to sort.</p>
+</div>
+
+<table class="table table-bordered table-condensed table-hover" id="bed-table">
+	<thead>
+		<tr>
+			<th class="align-left">Chromosome</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>kB Hom</th>
+			<th>SNP Hom</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for record in bed_data %}
+		<tr>
+			<td class="align-left">{{ make_ucsc_track(token=submission.token, genomic_position=record[0]) }}</td>
+			<td>{{ record[1]|jinja_filter_add_number_commas }}</td>
+			<td>{{ record[2]|jinja_filter_add_number_commas }}</td>
+			<td>{{ record[3]|jinja_filter_add_number_commas }}</td>
+			<td>{{ record[4]|jinja_filter_add_number_commas }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+
