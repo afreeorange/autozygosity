@@ -1,7 +1,7 @@
 from datetime import datetime
 
-PROJECT_PATH = "/Users/nikhil/Dropbox/autozygosity/" # Trailing slash required!
-HOST="0.0.0.0"
+PROJECT_PATH = "/opt/autozygosity/" # Trailing slash required!
+HOST="127.0.0.1"
 PORT=5000
 DEBUG = True
 
@@ -30,3 +30,4 @@ CSRF_ENABLED = True
 SECRET_KEY = "8MfeRORkN74/dsXMW/78BeLOu1yquSw7"
 TOKEN_REGEX = r'[a-zA-Z]{5,15}'
 UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'rar', 'zip', 'tar', 'tar.gz', 'tgz', 'gz', 'tar.bz', 'tbz', 'bz']
+

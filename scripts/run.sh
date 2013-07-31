@@ -8,7 +8,7 @@
 
 ### Edit these!
 
-BINARY_DIR="/home/adeluca"
+BINARY_DIR="/opt/autozygosity/scripts/" # Trailing slash required
 JAVA=$(which java)
 PERL=$(which perl)
 
