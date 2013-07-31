@@ -103,7 +103,7 @@ $(function () {
 		},
 		messages: {
 			vcf: {
-				validextensions: "You need to specify a valid input file"
+				validextensions: "You need to specify a VCF or compressed file for upload"
 			},
 			uri: {
 				url: "You need to specify a valid URI"

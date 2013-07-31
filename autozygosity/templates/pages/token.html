@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "_base.html" %}
 
 {% block content %}
 
@@ -7,31 +7,31 @@
 		<h1 id="token">{{ submission.token }}</h1>
 
 		{% if explain_submission(submission) %}
-			{% include "block-token-explanation.html" %}	
+			{% include "pages/blocks/token-explanation.html" %}	
 
 		{% else %}
 			{% if submission.status == 'submitted' %}
-				{% include "block-token-submitted.html" %}
+				{% include "pages/blocks/token-submitted.html" %}
 
 			{% elif submission.status == 'running' %}
-				{% include "block-token-running.html" %}
+				{% include "pages/blocks/token-running.html" %}
 
 			{% elif submission.status == 'completed' %}
-				{% include "block-token-completed.html" %}
+				{% include "pages/blocks/token-completed.html" %}
 
 			{% else %}
-				{% include "block-token-failed.html" %}
+				{% include "pages/blocks/token-failed.html" %}
 
 			{% endif %}
 		{% endif %}
 
 		<hr />
 
-		{% include "block-token-meta.html" %}
+		{% include "pages/blocks/token-meta.html" %}
 
 	{% else %}
 		
-		{% include "error-token.html" %}
+		{% include "errors/token.html" %}
 
 	{% endif %}
 	

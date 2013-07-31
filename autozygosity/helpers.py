@@ -76,7 +76,7 @@ def validate_download(function):
 			elif submission.status == 'failed':
 				return render_template('token.html', submission=submission)
 			else:
-				return render_template('error-unavailable.html', token=submission.token)
+				return render_template('errors/unavailable.html', token=submission.token)
 		else:
 			return function(*args, **kwargs)
 

@@ -1,0 +1,5 @@
+# Sample cron job: Analyze submitted samples once every 5 minutes.
+*/5 * * * * source /opt/autozygosity/bin/activate && /opt/autozygosity/bin/python /opt/autozygosity/process.py analyze >> /opt/autozygosity/logs/analysis.log
+
+# Clean up samples older than SUBMISSION_RETENTION_DAYS (in settings.py)
+*/5 * * * * source /opt/autozygosity/bin/activate && /opt/autozygosity/bin/python /opt/autozygosity/process.py clean >> /opt/autozygosity/logs/clean.log

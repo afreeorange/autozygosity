@@ -1,0 +1,36 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+	{% if submission_form.errors %}
+		{% if 'vcf' in submission_form.errors and 'uri' in submission_form.errors %}
+			<h3>You need to specify at least one upload method</h3>
+		{% endif %}
+	{% endif %}
+
+	<p>Homozygosity Mapping is a powerful technique used to narrow the search space for disease-causing variants in exome sequencing data. This has traditionally been performed using a separate micro-array based experiment, but with costs of exomes continuing to fall, homozygosity mapping can be performed using only exome sequence.</p>
+
+	<p>This homozygosity mapping tool can retain the region containing the disease-causing variant in a consanguineous pedigree, while eliminating XXX% of identified variants from consideration.</p>
+
+	<h3>To get started, give me <a href="http://www.1000genomes.org/node/101" title="The VCF Format">a VCF file</a></h3>
+
+	<ul class="nav nav-tabs" id="navigation">
+		<li class="active"><a href="#tab-upload" data-toggle="tab">Upload file</a></li>
+		<li><a href="#tab-uri" data-toggle="tab">Submit via URI</a></li>
+		<li><a href="#tab-params" data-toggle="tab">Customize Analysis</a></li>
+	</ul>
+
+	{% include "forms/vcf.html" %}
+
+	<hr />
+
+	<div class="row">
+		<div class="span7">
+			{% include "forms/token.html" %}
+		</div>
+		<div class="span5">
+			{% include "pages/blocks/index-publication.html" %}
+		</div>
+	</div>
+
+{% endblock %}

@@ -80,7 +80,7 @@ class joblog:
 		logformat = logging.Formatter(fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 									  datefmt = '%Y-%m-%dT%H:%M:%S')
 		# Create a handler
-		loghandler = logging.StreamHandler()
+		loghandler = logging.RotatingFileHandler('logs/debug.log', maxBytes=10 * 1024 * 1024, backupCount=20)
 		loghandler.setLevel(logging.DEBUG)
 		loghandler.setFormatter(logformat)
 
