@@ -7,7 +7,7 @@ fi
 
 DAEMON_PID=$(cat ./daemon.pid)
 
-echo -n "Stopping server with PID $DAEMON_PID..."
+echo -e "Stopping server with PID $DAEMON_PID..."
 kill -9 $DAEMON_PID
 rm ./daemon.pid
 

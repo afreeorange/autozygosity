@@ -15,12 +15,15 @@ while getopts ":u:e:f:" opt; do
 	esac
 done
 
-echo -e "Attempting to download $URI (a $EXTENSION file) to $FOLDER"
+echo -n "Attempting to download $URI to $FOLDER... "
 
 mkdir -p $FOLDER
-wget -O $FOLDER/input.$EXTENSION $URI
+wget -O $FOLDER/input.$EXTENSION $URI --quiet
 
 if [[ $? -ne 0 ]]; then
 	rm -rf $FOLDER
+	echo -e "failed."
 	exit 100
+else
+	echo -e "done."
 fi

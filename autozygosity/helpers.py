@@ -83,11 +83,15 @@ def validate_download(function):
 	return validate_download_decorator
 
 
-def jinja_method_explain_submission():
+def jinja_method_explain_submission(submission):
 	""" Jinja2 method to determine whether or not to show submission explanation.
 		Aimed at first-time visitors. Assume first-time visitor if the 
-		'explain_submission' cookie's not set.
+		'explain_submission' cookie's not set. Don't explain completed or failed
+		submissions.
 	"""
+	if submission.status == 'completed' or submission.status == 'failed':
+		return False
+
 	try:
 		return session['explain_submission']
 	except Exception, e:
@@ -97,6 +101,25 @@ def jinja_method_explain_submission():
 def jinja_method_get_hostname():
 	""" Jinja2 method to get the hostname """
 	return request.host_url
+
+
+# http://code.activestate.com/recipes/577081-humanized-representation-of-a-number-of-bytes/
+def jinja_method_max_upload_size(bytes = app.config['UPLOADED_VCF_MAX_SIZE'], precision=0):
+	""" Return a humanized string representation of a number of bytes. """
+	abbrevs = (
+		(1<<50L, 'PB'),
+		(1<<40L, 'TB'),
+		(1<<30L, 'GB'),
+		(1<<20L, 'MB'),
+		(1<<10L, 'kB'),
+		(1, 'bytes')
+	)
+	if bytes == 1:
+		return '1 byte'
+	for factor, suffix in abbrevs:
+		if bytes >= factor:
+			break
+	return '%.*f %s' % (precision, bytes / factor, suffix)
 
 
 @app.template_filter()
@@ -180,7 +203,7 @@ def jinja_filter_human_timestamp(the_timestamp):
 # https://github.com/greghaskins/gibberish/blob/master/gibberish.py
 initial_consonants = (set(string.ascii_lowercase) - 
 					  set('aeiou') -
- 					  # remove those easily confused with others
+					  # remove those easily confused with others
 					  set('qxc') |
 					  # add some crunchy clusters
 					  set(['bl', 'br', 'cl', 'cr', 'dr', 'fl',
@@ -193,7 +216,7 @@ final_consonants = (set(string.ascii_lowercase) -
 					set('qxcsj') |
 					# crunchy clusters
 					set(['ct', 'ft', 'mp', 'nd', 'ng', 'nk', 'nt',
-					 	 'pt', 'sk', 'sp', 'ss', 'st']))
+						 'pt', 'sk', 'sp', 'ss', 'st']))
 vowels = 'aeiou'
 
 # each syllable is consonant-vowel-consonant "pronounceable"
@@ -211,7 +234,7 @@ def generate_token(wordcount=2, digitcount=0):
 			token += str(int(random.random()*numbermax))
 	return token
 
+
 @app.template_filter()
 def make_comma_list(list):
 	return ", ".join(list)
- 

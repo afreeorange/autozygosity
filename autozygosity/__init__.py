@@ -15,7 +15,7 @@ app.config.from_object('settings')
 # Configure uploads
 vcf_uploads = UploadSet(name = 'vcf', extensions = tuple(app.config['UPLOAD_FORMAT_EXTENSIONS']))
 configure_uploads(app, vcf_uploads)
-patch_request_class(app, app.config['UPLOADED_VCF_MAX_SIZE']) # 100MB max upload size
+patch_request_class(app, app.config['UPLOADED_VCF_MAX_SIZE']) # 128MB max upload size
 
 # Attempt connection to MongoDB instance
 try:
@@ -30,6 +30,7 @@ except ConnectionError, e:
 from autozygosity import views, models, helpers
 app.jinja_env.globals.update(get_host_url=helpers.jinja_method_get_hostname)
 app.jinja_env.globals.update(explain_submission=helpers.jinja_method_explain_submission)
+app.jinja_env.globals.update(max_upload_size=helpers.jinja_method_max_upload_size)
 
 if __name__ == '__main__':
 	app.run()

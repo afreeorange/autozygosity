@@ -3,7 +3,7 @@ from datetime import datetime
 PROJECT_PATH = "/opt/autozygosity/" # Trailing slash required!
 HOST="127.0.0.1"
 PORT=5000
-DEBUG = True
+DEBUG = False
 
 PROJECT_NAME = "Homozygosity Mapping"
 MONGODB_SETTINGS = {'DB': "autozygosity", 'PORT': 27017}
@@ -19,7 +19,7 @@ SUBMISSION_RETENTION_DAYS=10
 # Upload settings
 UPLOADED_VCF_DEST  = PROJECT_PATH + "uploads/" # Trailing slash required again, Suzy!
 UPLOADED_VCF_ALLOW = "vcf"
-UPLOADED_VCF_MAX_SIZE = 108 * 1024 * 1024
+UPLOADED_VCF_MAX_SIZE = 128 * 1024 * 1024
 
 # Job status definitions (and associated CSS classes)
 JOB_STATUSES = ('submitted', 'running', 'completed', 'failed')
@@ -27,7 +27,5 @@ STATUS_CLASSES = ('label-inverse', 'label-info', 'label-success', 'label-importa
 STATUS_MAP = dict(zip(JOB_STATUSES, STATUS_CLASSES))
 
 CSRF_ENABLED = True
-SECRET_KEY = "8MfeRORkN74/dsXMW/78BeLOu1yquSw7"
 TOKEN_REGEX = r'[a-zA-Z]{5,15}'
 UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'rar', 'zip', 'tar', 'tar.gz', 'tgz', 'gz', 'tar.bz', 'tbz', 'bz']
-

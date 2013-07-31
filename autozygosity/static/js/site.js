@@ -178,9 +178,9 @@ $(function () {
 				// because I couldn't figure out how to get the response URI (_not_ responseText)
 				// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
 				// Could be missing something. This will have to do for now.
-				console.log(xhr.getAllResponseHeaders());
-				$('#tab-params').removeAttr('data-toggle');
-
+				if (!xhr.getResponseHeader('token')) {
+					window.location.href = "/misc/oops";
+				};
 				window.location.href = "/token/" + xhr.getResponseHeader('token');
 			}
 		});

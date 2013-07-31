@@ -12,13 +12,15 @@ from pprint import pprint
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+@app.route('/misc/notfound')
+def page_not_found(e = None):
 	""" Custom 404 error page """
 	return render_template('error-404.html'), 404
 
 
 @app.errorhandler(500)
-def page_not_found(e):
+@app.route('/misc/oops')
+def server_error(e = None):
 	""" Custom 500 error page """
 	return render_template('error-500.html'), 500
 
@@ -198,7 +200,7 @@ def allowed_extensions():
 
 @app.route('/misc/no_explanation', methods=['GET'])
 def no_explanation():
-	""" Returns allowed upload extensions. Used by Javascript. Overkill. """
+	""" Turn off token explanation on submission page """
 	session['explain_submission'] = False
 	return str(session['explain_submission'])
 

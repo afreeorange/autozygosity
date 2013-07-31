@@ -6,8 +6,8 @@
 
 		<h1 id="token">{{ submission.token }}</h1>
 
-		{% if explain_submission() and submission.status != 'failed' %}
-			{% include "block-token-explanation.html" %}
+		{% if explain_submission(submission) %}
+			{% include "block-token-explanation.html" %}	
 
 		{% else %}
 			{% if submission.status == 'submitted' %}
