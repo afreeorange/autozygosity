@@ -198,6 +198,11 @@ $(function () {
 	});
 
 
+	// Sample URI for URI form
+	$('#uri-sample-data').click(function() {
+		$('#uri').val(window.location.origin + '/static/sample.vcf');
+	});
+
 	/*
 	 * Natural Sort algorithm for Javascript - Version 0.7 - Released under MIT license
 	 * Author: Jim Palmer (based on chunking idea from Dave Koelle)
