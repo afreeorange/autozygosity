@@ -11,27 +11,35 @@ tool, which can retain the region containing the disease-causing variant in a
 consanguineous pedigree, while eliminating XXX% of identified variants from 
 consideration.
 
+You can run the analysis as a web service or a standalone script.
+
 ## Requirements
 
-### Web Server
+### Web Service
 
 * A *NIX server with the `bash` interpreter
 * `unzip`, `tar`, `unrar`, `unrar`, `bunzip2`, `openssl`
 * Python 2.7
-* Java 1.7
-* Perl
 * A running MongoDB server
 * A running Nginx server
 
 ### Analysis Tools
 
-* The [Genome Analysis Toolkit][gatk]
+* Java 1.7
+* Perl
+* [Genome Analysis Toolkit][gatk]
 * [VCFTools][vcftools]
 * [PLINK][plink]
 * [SAMtools][samtools]
 * [BEDtools][bedtools]
 
 ## Installation & Configuration
+
+### Standalone Script
+
+Please see `README.md` in the `scripts` folder.
+
+### Web Service
 
 1. Run `install` first. It should take care of most requirements for you.   
 **Important**: If you're using an RHEL-based system, edit 
@@ -72,14 +80,15 @@ and use Nginx as a reverse proxy to Gunicorn.
 
 ## To do
 
-* Log errors
+* Log error and debug messages
+* Write tests
 * Better CSS selector-names
 * VCF validator
 * Progress indicator for URI download
 
 ## License
 
-(c) Copyright 2013 Nikhil Anand <mail@nikhil.io> `http://nikhil.io`
+(c) Copyright 2013 Nikhil Anand <mail@nikhil.io> `http://nikhil.io`, and Adam Deluca <adam-deluca@uiowa.edu> `http://genome.uiowa.edu`
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

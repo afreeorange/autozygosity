@@ -14,6 +14,9 @@ mkdir -p logs uploads
 mkdir scripts/{bin,ref}
 
 # Create a nice virtual environment
+
+# If on RHEL, you'll need to compile Python 2.7 and use this instead:
+# virtualenv -p /path/to/python2.7 .
 virtualenv .
 source ./bin/activate
 

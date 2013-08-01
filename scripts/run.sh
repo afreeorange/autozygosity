@@ -3,28 +3,49 @@
 # Calculate the regions of autozygosity in a multi-sample VCF and annotate it with those regions
 # Uses plink to define regions of >1MB containing <=2 het snps per 1MB sliding window
 
-# Original script by Adam DeLuca  <adam-deluca@uiowa.edu>
+# Original script by Adam DeLuca <adam-deluca@uiowa.edu>
 # Adapted for web interface by Nikhil Anand <nikhil-anand@uiowa.edu>
 
 ### Edit these!
 
-BINARY_DIR="/opt/autozygosity/scripts/" # Trailing slash required
-JAVA=$(which java)
-PERL=$(which perl)
+# Full path to this script. Trailing slash required
+BINARY_DIR="/opt/autozygosity/scripts/"
 
+# Paths to analysis tools
 BEDTOOLS=$BINARY_DIR/bin/bedtools/bin/
 GATK=$BINARY_DIR/bin/gatk-master/dist/GenomeAnalysisTK.jar
 PLINK=$BINARY_DIR/bin/plink/plink
-REFERENCE=$BINARY_DIR/ref/hg19.fa
 TABIX=$BINARY_DIR/bin/tabix/
 VCFTOOLS=$BINARY_DIR/bin/vcftools/bin/
 
+# Path to reference genome
+REFERENCE=$BINARY_DIR/ref/hg19.fa
+
+# You may or may not want to change these
 export PATH=$PATH:$TABIX:/usr/java/latest/bin/
 export PERL5LIB=$PERL5LIB:$BINARY_DIR/bin/vcftools/perl/
+JAVA=$(which java)
+PERL=$(which perl)
 
 ### Don't touch anything else. You're safe now, Timmy.
 
+# Usage information
+usage() {
+  echo -e "
+`basename $0` [OPTIONS]
+
+Options
+ -i   path to VCF input file
+ -v   Minimum variant quality
+ -d   Minimum quality depth
+ -w   Homozygosity window size
+ -c   Heterozygous Calls Allowed in Window
+"
+  exit 
+}
+
 IS_ARCHIVE=1
+COMPRESS_OUTPUT=0
 SAMPLE_DIR=""
 UPLOADED_VCF=""
 INPUT_VCF=""
@@ -35,7 +56,7 @@ MIN_QUALITY_DEPTH=10
 HOMOZYG_WINDOW_SIZE=1000
 HETEROZYG_CALLS=10
 
-while getopts ":i:v:d:w:c:" opt; do
+while getopts ":i:v:d:w:c:z" opt; do
 	case $opt in
 		i)
 			UPLOADED_VCF=$OPTARG
@@ -52,8 +73,19 @@ while getopts ":i:v:d:w:c:" opt; do
 		c)
 			HETEROZYG_CALLS=$OPTARG
 			;;
+		z)
+			COMPRESS_OUTPUT=1
+			;;
 	esac
 done
+
+if [ -z $UPLOADED_VCF ]; then
+	echo -e "! You must specify an input VCF file (with the -i flag) at a minimum"
+	usage
+	exit 50
+fi
+
+# Get sample directory
 SAMPLE_DIR=$(dirname $UPLOADED_VCF)
 
 # Now try to extract the file with some filesystem gymnastics
@@ -195,9 +227,11 @@ mv $SAMPLE_DIR/plink_ROH.bed $SAMPLE_DIR/output.bed
 # Change chr23 to chrX (Else UCSC won't like file. Plink!!)
 sed -i 's/chr23/chrX/' $SAMPLE_DIR/output.bed
 
-# Compress output files
-cd $SAMPLE_DIR
-zip output.zip output.ROH.vcf output.bed
+# Compress output files if needed
+if [[ $COMPRESS_OUTPUT -eq 1 ]]; then
+	cd $SAMPLE_DIR
+	zip output.zip output.ROH.vcf output.bed
+fi
 
 # Clean up
 rm -rf $SAMPLE_DIR/plink* $SAMPLE_DIR/QDfilter* $SAMPLE_DIR/temp_sample* $SAMPLE_DIR/input.vcf.idx $SAMPLE_DIR/extraction_temp/
