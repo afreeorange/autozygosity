@@ -1,8 +1,16 @@
 {% extends "_base.html" %}
 {% block content %}
 	<div class="pagination-centered">
+
 		<h1 class="sad-face">:(</h1>
-		<h2>I couldn't read that URI</h2>
-		<p>Sorry about this. Email Nikhil with the URI you were trying to submit.</p>
+		<h2>I couldn't read that. Sorry.</h2>
+		{% if error_output %}
+		<hr />
+		<h4>Why this happened</h4>
+		{{ error_output }}			
+		<hr />
+		<p>If you think you did nothing wrong, <a href="mailto:nikhil-anand@uiowa.edu" title="Email Nikhil with this error">email Nikhil</a> with the URI you were trying to submit.</p>
+		{% endif %}
+
 	</div>
 {% endblock %}

@@ -123,6 +123,18 @@ def jinja_method_max_upload_size(bytes = app.config['UPLOADED_VCF_MAX_SIZE'], pr
 
 
 @app.template_filter()
+def jinja_filter_jobs_ahead(job_count):
+	""" Return the number of jobs ahead of current submission in a grammatically correct format """
+	if job_count == 0:
+		stub = "are no submissions"
+	elif job_count == 1:
+		stub = "is one submission"
+	else:
+		stub = "are " + str(job_count) + " submissions"
+	return stub
+
+
+@app.template_filter()
 def jinja_filter_add_number_commas(possible_number):
 	""" Jinja2 filter to format numbers """
 	try:

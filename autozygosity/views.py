@@ -1,7 +1,8 @@
 import os
 import re
+import shlex
 from datetime import datetime
-from subprocess import check_call, CalledProcessError
+from subprocess import check_call, check_output, Popen, CalledProcessError, STDOUT, PIPE
 
 from flask import Flask, render_template, make_response, send_from_directory, request, session, redirect, url_for, abort, flash, send_file
 from autozygosity import app, vcf_uploads
@@ -69,6 +70,7 @@ def token(token = None):
 
 	bed_data = []
 	submission = job.objects(token__contains = token.lower())[0]
+	jobs_ahead = job.get_submitted().count() - 1
 
 	try:
 		with open(submission.output_bed_path) as file:
@@ -77,7 +79,7 @@ def token(token = None):
 	except Exception, e:
 		pass
 
-	resp = make_response(render_template("pages/token.html", submission = submission, bed_data = bed_data))
+	resp = make_response(render_template("pages/token.html", submission = submission, bed_data = bed_data, jobs_ahead=jobs_ahead))
 	resp.headers.add('token', token) # Need this for JQuery form plugin redirect
 	return resp
 
@@ -99,12 +101,11 @@ def index():
 		submission_folder = "".join([app.config['UPLOADED_VCF_DEST'], submission_time.strftime('%Y-%m-%dT%H:%M:%S'), "-", token])
 		extension = ""
 		savename = ""
-		download_script = app.config['PROJECT_PATH'] + "scripts/download_uri.sh"
+		download_script = app.config['PROJECT_PATH'] + "scripts/download.sh"
 		upload_log = app.config['PROJECT_PATH'] + 'logs/uploads.log'
 
 		# Prioritize URI location over upload for confused/naughty visitors
 		if request.form['uri']:
-			print "Trying", request.form['uri']
 
 			# Try to get submission upload extension
 			try:
@@ -116,17 +117,26 @@ def index():
 				savename = "input." + extension
 
 			# Try downloading remote file.
-			try:
-				check_call(download_script + ' '
-							+ ' -u ' + request.form['uri']
-							+ ' -e ' + extension
-							+ ' -f ' + submission_folder
-							+ ' &> ' + upload_log
-							, shell=True)
-			except CalledProcessError, e:
-				return render_template("errors/uri.html")
+			download_process = Popen(download_script + ' '
+									+ ' -u ' + request.form['uri']
+									+ ' -e ' + extension
+									+ ' -d ' + submission_folder
+									+ ' -m ' + str(app.config['DOWNLOAD_VCF_MAX_SIZE'])
+									,
+									shell=True,
+									stderr=PIPE,
+									stdout=PIPE
+									)
+
+			# Wait for the process to finish
+			process_output = download_process.communicate()
+
+			# Check return code. Let process itself handle resolving error code -> description
+			if download_process.returncode != 0:
+				return render_template("errors/uri.html", error_output=process_output[0])
+				
+			# Try saving job if download was successful
 			else:
-				# Try saving job if upload was successful
 				vcf_job = job(  token=token, 
 								ip_address=request.remote_addr, 
 								submitted=submission_time,

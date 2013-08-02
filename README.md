@@ -17,8 +17,8 @@ You can run the analysis as a web service or a standalone script.
 
 ### Web Service
 
-* A *NIX server with the `bash` interpreter
-* `unzip`, `tar`, `unrar`, `unrar`, `bunzip2`, `openssl`
+* A *NIX server with the `bash` interpreter, `openssl`, and `curl`
+* `unzip`, `tar`, `unrar`, `unrar`, and `bunzip2`
 * Python 2.7
 * A running MongoDB server
 * A running Nginx server
@@ -76,7 +76,7 @@ and use Nginx as a reverse proxy to Gunicorn.
 
 ## Screenshots
 
-[Dropbox link][dropbox]
+[View at Dropbox][dropbox]
 
 ## To do
 

@@ -47,7 +47,7 @@ def analyze():
 			submission.started = datetime.now()
 			submission.status = 'running'
 			submission.save()
-			print submission.started, "Starting", submission.token
+			print submission.started, "Starting", submission.token, "from", submission.ip_address
 			check_call(analysis_script + ' '
 						+ ' -i ' + submission.input_vcf_path
 						+ ' -v ' + str(submission.min_variant_quality)

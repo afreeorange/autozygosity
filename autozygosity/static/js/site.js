@@ -174,13 +174,16 @@ $(function () {
 			complete: function(xhr) {
 				$('.hide-after-submit ').fadeOut();
 
+				// Anything other than 200 (including a 404) and barf...
+				if (xhr.status != 200) {
+					window.location.href = "/misc/oops";
+					return true;
+				};
+
 				// Here, I make Flask return a header with the submission token. This is
 				// because I couldn't figure out how to get the response URI (_not_ responseText)
 				// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
 				// Could be missing something. This will have to do for now.
-				if (!xhr.getResponseHeader('token')) {
-					window.location.href = "/misc/oops";
-				};
 				window.location.href = "/token/" + xhr.getResponseHeader('token');
 			}
 		});

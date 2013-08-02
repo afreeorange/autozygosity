@@ -31,17 +31,17 @@ PERL=$(which perl)
 
 # Usage information
 usage() {
-  echo -e "
+	echo -e "
 `basename $0` [OPTIONS]
 
 Options
- -i   path to VCF input file
- -v   Minimum variant quality
- -d   Minimum quality depth
- -w   Homozygosity window size
- -c   Heterozygous Calls Allowed in Window
+-i   path to VCF input file
+-v   Minimum variant quality
+-d   Minimum quality depth
+-w   Homozygosity window size
+-c   Heterozygous Calls Allowed in Window
 "
-  exit 
+	exit 
 }
 
 IS_ARCHIVE=1
