@@ -55,7 +55,7 @@ EXIT_CODE=$?
 
 # http://curl.haxx.se/libcurl/c/libcurl-errors.html
 if [[ $EXIT_CODE -eq 22 ]]; then
-	echo -e "Couldn't find anything at that URI. Are you sure it's up?" 2>&1
+	echo -e "Couldn't find anything at that URI. Are you sure it's valid?" 2>&1
 elif [[ $EXIT_CODE -eq 63 ]]; then
 	echo -e "File is larger than maximum allowed URI upload size ($MAX_SIZE bytes)" 2>&1
 fi

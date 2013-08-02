@@ -6,10 +6,11 @@
 		<h2>I couldn't read that. Sorry.</h2>
 		{% if error_output %}
 		<hr />
-		<h4>Why this happened</h4>
-		{{ error_output }}			
+		<h3>Why this happened</h3>
+		{{ error_output[0] }}
+		{{ error_output[1] }}
 		<hr />
-		<p>If you think you did nothing wrong, <a href="mailto:nikhil-anand@uiowa.edu" title="Email Nikhil with this error">email Nikhil</a> with the URI you were trying to submit.</p>
+		<p><small>If you think you did nothing wrong, <a href="mailto:nikhil-anand@uiowa.edu" title="Email Nikhil with this error">email Nikhil</a> with the URI you were trying to submit.</small></p>
 		{% endif %}
 
 	</div>

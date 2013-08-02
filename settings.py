@@ -22,7 +22,7 @@ UPLOADED_VCF_ALLOW = "vcf"
 UPLOADED_VCF_MAX_SIZE = 128 * 1024 * 1024
 
 # URI upload setting
-DOWNLOAD_VCF_MAX_SIZE = 512 * 1024 * 1024
+DOWNLOAD_VCF_MAX_SIZE = 512 * 1024 * 24
 
 # Job status definitions (and associated CSS classes)
 JOB_STATUSES = ('submitted', 'running', 'completed', 'failed')
@@ -32,3 +32,4 @@ STATUS_MAP = dict(zip(JOB_STATUSES, STATUS_CLASSES))
 CSRF_ENABLED = True
 TOKEN_REGEX = r'[a-zA-Z]{5,15}'
 UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'rar', 'zip', 'tar', 'tar.gz', 'tgz', 'gz', 'tar.bz', 'tbz', 'bz']
+SECRET_KEY="asdklajskldsajkldjaskd"

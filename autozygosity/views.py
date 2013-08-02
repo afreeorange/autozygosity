@@ -133,7 +133,8 @@ def index():
 
 			# Check return code. Let process itself handle resolving error code -> description
 			if download_process.returncode != 0:
-				return render_template("errors/uri.html", error_output=process_output[0])
+				print str(process_output)
+				return render_template("errors/uri.html", error_output=process_output)
 				
 			# Try saving job if download was successful
 			else:

@@ -1,15 +1,22 @@
+@import url("http://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,400italic,700");
 html,
 body {
 height: 100%;
 }
 body {
+font-family: "Open Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 background: url("/static/img/back.png") center no-repeat;
+}
+h2,h3,h4,h5,h6, big {
+font-family: "Lato", "Helvetica Neue", helvetica, arial, sans-serif;
 }
 small ul li {
 list-style-image: url('/static/img/bullet.png');
 }
 #masthead {
+font-family: "Montserrat", "Lato", "Helvetica Neue", helvetica, arial, sans-serif;
 margin: 30px 0 30px 0;
+letter-spacing: -1px;
 }
 #masthead a {
 color: #2C3E50;

@@ -9,21 +9,33 @@ for command in virtualenv pip; do
 	fi
 done
 
-# Create some folders
+# Halt if Python is not 2.7+
+PYTHON_MAJOR_VERSION=$(python -c 'import sys; print sys.version_info.major')
+if [[ $PYTHON_MAJOR_VERSION -ne 2 ]]; then
+	echo -e "! This application won't run with Python 3 (yet)"
+	exit 2
+fi
+PYTHON_MINOR_VERSION=$(python -c 'import sys; print sys.version_info.minor')
+if [[ $PYTHON_MINOR_VERSION -lt 7 ]]; then
+	echo -e "! You need Python 2.7+"
+	exit 3
+fi
+
+# Create some folders and logfiles
 mkdir -p logs uploads
-mkdir scripts/{bin,ref}
+touch logs/nginx.{access,error}.log
 
 # Create a nice virtual environment
-
 # If on RHEL, you'll need to compile Python 2.7 and use this instead:
-# virtualenv -p /path/to/python2.7 .
+#virtualenv -p /usr/bin/python2.7 .
 virtualenv .
 source ./bin/activate
 
 # Install required modules
 pip install -r requirements.txt
 
-# Don't track settings.py and the run script
+# Don't track a few files
+echo -e "install" >> ./.gitignore
 echo -e "scripts/run.sh" >> ./.gitignore
 echo -e "settings.py" >> ./.gitignore
 
