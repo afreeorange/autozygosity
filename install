@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# You'll need Python 2.7+ for this application. RHEL, notably,
+# uses 2.6 as default. Change this variable to wherever you've 
+# compiled Python 2.7. 
+# E.g.
+# PYTHON_PATH="/usr/bin/python2.7"
+PYTHON_PATH=$(which python)
+
 # Halt if virtualenv or pip are not installed
 for command in virtualenv pip; do
 	which $command &> /dev/null
@@ -9,30 +16,27 @@ for command in virtualenv pip; do
 	fi
 done
 
-# Halt if Python is not 2.7+
-PYTHON_MAJOR_VERSION=$(python -c 'import sys; print sys.version_info.major')
-if [[ $PYTHON_MAJOR_VERSION -ne 2 ]]; then
-	echo -e "! This application won't run with Python 3 (yet)"
-	exit 2
-fi
-PYTHON_MINOR_VERSION=$(python -c 'import sys; print sys.version_info.minor')
-if [[ $PYTHON_MINOR_VERSION -lt 7 ]]; then
-	echo -e "! You need Python 2.7+"
-	exit 3
-fi
-
-# Create some folders and logfiles
-mkdir -p logs uploads
-touch logs/nginx.{access,error}.log
+# Warning about Python 2.7
+echo -e "
+! Things won't work if you don't have Python 2.7+
+  Cancel in the next few seconds if you don't.
+  See README.md or edit this file if you've compiled
+  it for your platform.
+"
+echo -n "You're currently using "
+$PYTHON_PATH --version
+sleep 9
 
 # Create a nice virtual environment
-# If on RHEL, you'll need to compile Python 2.7 and use this instead:
-#virtualenv -p /usr/bin/python2.7 .
-virtualenv .
+virtualenv -p $PYTHON_PATH .
 source ./bin/activate
 
 # Install required modules
 pip install -r requirements.txt
+
+# Create some folders and logfiles
+mkdir -p logs uploads
+touch logs/nginx.{access,error}.log
 
 # Don't track a few files
 echo -e "install" >> ./.gitignore

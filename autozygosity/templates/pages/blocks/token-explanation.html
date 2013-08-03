@@ -6,8 +6,10 @@
 		You can check the status of your submission at any time by refreshing this page.
 		<br />
 		Processing should take about 20 minutes.
+		{% if submission.status == 'submitted' %}
 		<br />
 		<strong>There {{ jobs_ahead|jinja_filter_jobs_ahead }}</strong> ahead of yours.
+		{% endif %}
 	</p>
-	<p><a href="javascript://" id="no-token-explanation">Got it. Don&#8217;t show me this message again.</a></p>
+	<p><a href="javascript://" id="no-token-explanation">Got it. Don&#8217;t show me this explanation again.</a></p>
 </div>

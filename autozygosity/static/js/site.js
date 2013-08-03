@@ -275,7 +275,7 @@ $(function () {
 
 	// Apply JQuery.Datatables magic to BED file results
 	$('#bed-table').dataTable({
-		"aoColumns": [{"sType": "natural"}, {"sType": "formatted-num"}, {"sType": "formatted-num"}, null, null],
+		"aoColumns": [{"sType": "natural"}, {"sType": "formatted-num"}, {"sType": "formatted-num"}, {"sType": "formatted-num"}, {"sType": "formatted-num"}],
 		"bFilter": false,
 		"bPaginate": false,
 		"bInfo": false,

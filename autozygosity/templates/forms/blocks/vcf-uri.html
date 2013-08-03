@@ -8,6 +8,7 @@
 		<br />
 		<small id="uri-example">
 			<strong>E.g.</strong> <code>http://www.example.com/input.vcf</code> <a href="javascript://" id="uri-sample-data">(Use sample URI?)</a>
+			<br />
 			<span style="display:none;">
 				<br />
 				<img src="/static/img/wait.gif" /> Attempting to fetch remote file. This might take a while depending on size and connection speed.
@@ -18,7 +19,9 @@
 		<small>
 			You can link to a raw VCF file or any compatible compression format.
 			<br />
-			If you specify a remote file without an extension, I'll assume it's in VCF format.
+			If you specify a remote file without an extension, I&#8217;ll assume it&#8217;s in VCF format.
+			<br />
+			Remote file size shouldn&#8217;t exceed <strong>{{ max_upload_size(config.DOWNLOAD_VCF_MAX_SIZE) }}</strong>
 		</small>
 	</div>
 </div>
