@@ -54,6 +54,7 @@ def analyze():
 						+ ' -d ' + str(submission.min_quality_depth)
 						+ ' -w ' + str(submission.homozyg_window_size)
 						+ ' -c ' + str(submission.heterozyg_calls)
+						+ ' -z '
 						+ ' &> ' + submission.full_upload_path + '/analysis.log'
 						, shell=True)
 		except CalledProcessError, e:
