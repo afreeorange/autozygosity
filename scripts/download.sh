@@ -9,15 +9,6 @@ MAX_SIZE="134217728" # 128 MiB
 
 ### STOP EDITING!
 
-# Get a human-friendly max. upload size
-if [ $MAX_SIZE -ge 1073741824 ]; then
-    MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1073741824"| bc)" GB"
-elif [ $MAX_SIZE -ge 1048576 ]; then
-    MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1048576"| bc)" MB"
-elif [ $MAX_SIZE -ge 1024 ]; then
-    MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1024" | bc)" KB"
-fi
-
 while getopts ":u:e:d:f:m:" opt; do
 	case $opt in
 		u)
@@ -45,15 +36,24 @@ if [[ -z $URI ]]; then
 Options
 -u   Remote URI for download (required)
 -f   Local filename
-	 	Default is 'input'
+		Default is 'input'
 -e   Extension to save remote file with
-	 	Default is 'vcf'
+		Default is 'vcf'
 -d   Local directory to save remote file into
-	 	Default is '.'
+		Default is '.'
 -m   Maximum download size
-	 	Default is 128 MiB
+		Default is 128 MiB
 "
 	exit
+fi
+
+# Get a human-friendly max. upload size
+if [ $MAX_SIZE -ge 1073741824 ]; then
+	MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1073741824"| bc)" GB"
+elif [ $MAX_SIZE -ge 1048576 ]; then
+	MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1048576"| bc)" MB"
+elif [ $MAX_SIZE -ge 1024 ]; then
+	MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1024" | bc)" KB"
 fi
 
 curl --output $FOLDER/$FILENAME.$EXTENSION \
