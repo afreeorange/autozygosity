@@ -7,6 +7,17 @@ EXTENSION="vcf"
 FOLDER="."
 MAX_SIZE="134217728" # 128 MiB
 
+### STOP EDITING!
+
+# Get a human-friendly max. upload size
+if [ $MAX_SIZE -ge 1073741824 ]; then
+    MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1073741824"| bc)" GB"
+elif [ $MAX_SIZE -ge 1048576 ]; then
+    MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1048576"| bc)" MB"
+elif [ $MAX_SIZE -ge 1024 ]; then
+    MAX_SIZE_READABLE=$(echo "scale=0;$MAX_SIZE/1024" | bc)" KB"
+fi
+
 while getopts ":u:e:d:f:m:" opt; do
 	case $opt in
 		u)
@@ -57,6 +68,6 @@ EXIT_CODE=$?
 if [[ $EXIT_CODE -eq 22 ]]; then
 	echo -e "Couldn't find anything at that URI. Are you sure it's valid?" 2>&1
 elif [[ $EXIT_CODE -eq 63 ]]; then
-	echo -e "File is larger than maximum allowed URI upload size ($MAX_SIZE bytes)" 2>&1
+	echo -e "File is larger than maximum allowed URI upload size ($MAX_SIZE_READABLE)" 2>&1
 fi
 exit $EXIT_CODE
