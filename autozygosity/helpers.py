@@ -167,6 +167,13 @@ def get_submission(token):
 	return models.job.objects(token__contains = token.lower())[0]
 
 
+def jobs_ahead_of(token):
+	""" Returns a count of the number of submitted jobs before current token """
+	token_object = get_submission(token)
+	job_count = models.job.objects(token__ne = token.lower(), status = 'submitted', submitted__lt = token_object.submitted).count()
+	return job_count
+
+
 @app.template_filter()
 def jinja_filter_human_timestamp(the_timestamp):
 	"""

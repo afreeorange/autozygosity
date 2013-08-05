@@ -69,8 +69,8 @@ def token(token = None):
 		token = request.form['token']
 
 	bed_data = []
-	submission = job.objects(token__contains = token.lower())[0]
-	jobs_ahead = job.get_submitted().count() - 1
+	submission = get_submission(token)
+	jobs_ahead = jobs_ahead_of(token)
 
 	try:
 		with open(submission.output_bed_path) as file:
