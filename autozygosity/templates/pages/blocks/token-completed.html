@@ -9,16 +9,16 @@
 		<small>
 			Please note that these will be available for just 10 days
 			<br />
-			You can download <a href="/token/{{ submission.token }}/output/bed">the BED</a> and <a href="/token/{{ submission.token }}/output/vcf">VCF</a> outputs separately.
+			You can download <a href="{{ url_for('download_output_bed', token=submission.token) }}">the BED</a> and <a href="{{ url_for('download_output_vcf', token=submission.token) }}">VCF</a> outputs separately.
 		</small>
 	</p>
 
 	<div class="row">
 		<div class="span3 offset3">
-			<a href="/token/{{ submission.token }}/input" id="download-input"><span>Download your original VCF input file</span></a>
+			<a href="{{ url_for('download_input', token=submission.token) }}" id="download-input"><span>Download your original VCF input file</span></a>
 		</div>
 		<div class="span3">
-			<a href="/token/{{ submission.token }}/output" id="download-results"><span>Download a zip archive of your results</span></a>
+			<a href="{{ url_for('download_output', token=submission.token) }}" id="download-results"><span>Download a zip archive of your results</span></a>
 		</div>
 	</div>
 </div>

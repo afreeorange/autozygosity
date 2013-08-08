@@ -59,6 +59,7 @@ fi
 curl --output $FOLDER/$FILENAME.$EXTENSION \
 	 --max-filesize $MAX_SIZE \
 	 --create-dirs \
+	 --insecure \
 	 --silent \
 	 --fail \
 	$URI
