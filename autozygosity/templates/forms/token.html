@@ -9,5 +9,6 @@
 	{% if session['last_token'] %}
 	<br />
 	<small>Your most recent submission was called &#8220;<a id="last-submission" href="{{ url_for('token_page', token=session['last_token']) }}">{{ session['last_token'] }}</a>&#8221;.</small>
+	<small id="older-tokens" style="display:none;"></small>
 	{% endif %}
 </form>

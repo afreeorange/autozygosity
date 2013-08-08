@@ -47,7 +47,7 @@ js = Bundle('js/jquery.ui.min.js',
 			'js/bootstrap-slider.min.js', 
 			'js/bootstrap-fileupload.min.js',
 			'js/autozygosity.js',
-			filters='jsmin', output='js/packed.js')
+			filters='yui_js', output='js/packed.js')
 assets.register('autozygosity_js', js)
 
 css = Bundle('css/bootstrap.min.css',
@@ -55,7 +55,7 @@ css = Bundle('css/bootstrap.min.css',
 			 'css/bootstrap-slider.min.css',
 			 'css/bootstrap-fileupload.min.css',
 			 'css/autozygosity.css',
-			filters='cssmin', output='css/packed.css')
+			filters='yui_css', output='css/packed.css')
 assets.register('autozygosity_css', css)
 
 # Set up routing appropriately

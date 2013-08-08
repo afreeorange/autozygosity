@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # From https://github.com/mitsuhiko/jinja2-htmlcompress/pull/6/files
 
 # Copyright (c) 2011 by Armin Ronacher, see AUTHORS for more details.
@@ -32,8 +33,6 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-# -*- coding: utf-8 -*-
 """
     jinja2htmlcompress
     ~~~~~~~~~~~~~~~~~~

@@ -28,6 +28,9 @@ UPLOADED_VCF_MAX_SIZE = 128 * 1024 * 1024
 # URI upload setting
 DOWNLOAD_VCF_MAX_SIZE = 512 * 1024 * 1024
 
+# Number of prior tokens to keep in client storage
+TOKENS_IN_STORAGE = 5
+
 # Job status definitions (and associated CSS classes)
 JOB_STATUSES = ('submitted', 'running', 'completed', 'failed')
 STATUS_CLASSES = ('label-inverse', 'label-info', 'label-success', 'label-important')

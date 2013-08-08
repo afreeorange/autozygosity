@@ -10,6 +10,25 @@ function disable_interaction() {
 
 $(function () {
 
+	// Keep a few older tokens if local storage is available
+	if ($.jStorage.storageAvailable()) {
+
+		older_tokens = $.jStorage.get('older_tokens', []);
+		console.log(older_tokens);
+		if (older_tokens.length == autozygosity.tokens_in_storage) {
+			older_tokens.shift();
+		};
+
+		if (older_tokens.length >= 2) {
+			$('#older-tokens').show();
+			$('#older-tokens').text('A few older tokens: ');
+			for (var i = 0; i < older_tokens.length - 1; i++) {
+				$('#older-tokens').append(' <a href="' + autozygosity.app_root + "/token/" + older_tokens[i] + '">' + older_tokens[i] + '</a>');
+				console.log(older_tokens[i]);
+			};
+		};
+	};
+
 	// Turns the token submission explanation message off.
 	// Again, probably overkill. Used jQuery forms for upload
 	// progress. I wanted it to go to the submission target
@@ -169,6 +188,12 @@ $(function () {
 				if (xhr.status != 200) {
 					window.location.href = autozygosity.app_root + "/misc/oops";
 					return true;
+				};
+
+				// Update client storage with tokens
+				if ($.jStorage.storageAvailable()) {
+					older_tokens.push(xhr.getResponseHeader('token'));
+					$.jStorage.set('older_tokens', older_tokens);
 				};
 
 				// Here, I make Flask return a header with the submission token. This is

@@ -158,3 +158,23 @@ display: block;
 padding:3px 0 0 0;
 margin:5px 0 0 0;
 }
+#older-tokens {
+border-top: 1px dotted #DDD;
+display: block;
+padding:8px 0 0 0;
+margin:8px 0 0 0;
+font-size: 12px;
+}
+#older-tokens a {
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+border: 1px solid #DDD;
+padding: 0 3px;
+}
+#older-tokens a:hover {
+border: 1px solid #1DCCAA;
+background:#1DCCAA;
+text-decoration: none;
+color: white;
+}
