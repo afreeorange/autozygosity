@@ -11,9 +11,9 @@
 		<title>{{ config.PROJECT_NAME }}</title>
 		<script src="{{ url_for('static', filename='js/modernizr.min.js') }}"></script>
 		<link rel="stylesheet" type="text/css" href="">
-		{% assets "autozygosity_css" %}
+		{% assets "autozygosity_css" -%}
 		<link rel="stylesheet" href="{{ ASSET_URL }}">
-		{% endassets %}
+		{% endassets -%}
 	</head>
 	<body class="container">
 
@@ -68,9 +68,9 @@
 			{% endif -%}
 			autozygosity.allowed_extensions = "{{ config.UPLOAD_FORMAT_EXTENSIONS_REGEX }}";
 		</script>
-		{% assets "autozygosity_js" %}
+		{% assets "autozygosity_js" -%}
 		<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-		{% endassets %}
+		{% endassets -%}
 	</body>
 </html>
 

@@ -26,10 +26,16 @@ except ConnectionError, e:
 	print "If on another server or port, look at settings.py."
 	exit(1) 
 
-from autozygosity import views, models, helpers
+from autozygosity import views, models, helpers, modules
+
+# Configure Jinja2 filters
 app.jinja_env.globals.update(get_host_url=helpers.jinja_method_get_hostname)
 app.jinja_env.globals.update(explain_submission=helpers.jinja_method_explain_submission)
 app.jinja_env.globals.update(max_upload_size=helpers.jinja_method_max_upload_size)
+
+# Configure Jinja2 to compress HTML output
+from autozygosity.modules import jinja2htmlcompress
+app.jinja_env.add_extension("autozygosity.modules.jinja2htmlcompress.HTMLCompress")
 
 # Set up assets (including jQuery.js breaks things somehow...)
 assets = Environment(app)
@@ -52,7 +58,7 @@ css = Bundle('css/bootstrap.min.css',
 			filters='cssmin', output='css/packed.css')
 assets.register('autozygosity_css', css)
 
-# Set up routing
+# Set up routing appropriately
 if app.config['APPLICATION_ROOT']:
 	from werkzeug.wsgi import DispatcherMiddleware
 	routed_app = DispatcherMiddleware(app, {app.config['APPLICATION_ROOT']: app})

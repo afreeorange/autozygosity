@@ -1,6 +1,6 @@
 from datetime import datetime
 
-PROJECT_PATH = "/Volumes/Gromit/home/nikhil/Desktop/temp/" # Trailing slash required!
+PROJECT_PATH = "/opt/autozygosity/" # Trailing slash required!
 HOST="127.0.0.1"
 PORT=5000
 DEBUG = False
@@ -37,4 +37,3 @@ CSRF_ENABLED = True
 TOKEN_REGEX = r'[a-zA-Z]{5,15}'
 UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'rar', 'zip', 'tar', 'tar.gz', 'tgz', 'gz', 'tar.bz', 'tbz', 'bz']
 UPLOAD_FORMAT_EXTENSIONS_REGEX = "|".join(UPLOAD_FORMAT_EXTENSIONS)
-SECRET_KEY = "JcoHhPRGESIFTl9CUQoF1Igv7UVy7oQl"
