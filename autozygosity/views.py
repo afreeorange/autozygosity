@@ -69,7 +69,7 @@ def download_input(token):
 
 
 @app.route('/token/check', methods=['POST'])
-@app.route('/token/<token:token>', methods=['GET'])
+@app.route('/token/<token:token>', methods=['GET'], endpoint="token_page") # http://stackoverflow.com/a/7794516
 @validate_token
 def token(token = None):
 	if request.method == 'POST':
@@ -92,7 +92,6 @@ def token(token = None):
 
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
 def index():
 	submission_form = job_form()
 	token_form = check_form()
@@ -160,7 +159,7 @@ def index():
 				else:
 					session['last_token'] = token
 					if token != 'null':
-						return redirect("/token/" + token)
+						return redirect(url_for('token_page', token=token))
 					else:
 						abort(500)
 
@@ -199,7 +198,7 @@ def index():
 			else:
 				session['last_token'] = token
 				if token != 'null':
-					return redirect("/token/" + token)
+					return redirect(url_for('token_page', token=token))
 				else:
 					abort(500)
 

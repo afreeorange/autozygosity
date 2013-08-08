@@ -3,7 +3,7 @@ from datetime import datetime
 PROJECT_PATH = "/opt/autozygosity/" # Trailing slash required!
 HOST="127.0.0.1"
 PORT=5000
-DEBUG = True
+DEBUG = False
 
 # Use if you want to host at example.com/autozygosity.
 # If you're on a dedicated subdomain, comment this out entirely.

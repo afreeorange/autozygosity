@@ -38,7 +38,7 @@
 			<div class="alert">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade it to use this site (and many more on the web) properly</a>.</div>
 		<![endif]-->
 
-		<h1 class="pagination-centered" id="masthead"><a href="/" title="Go home!">{{ config.PROJECT_NAME }}</a></h1>
+		<h1 class="pagination-centered" id="masthead"><a href="{{ url_for('index') }}" title="Go home!">{{ config.PROJECT_NAME }}</a></h1>
 
 		<hr />
 
@@ -82,7 +82,7 @@
 			{% endif -%}
 			autozygosity.allowed_extensions = "{{ config.UPLOAD_FORMAT_EXTENSIONS_REGEX }}";
 		</script>
-		<script src="{{ url_for('static', filename='js/site.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/site.min.js') }}"></script>
 		{% if self.javascript() %}
 		<script type="text/javascript">
 			{% block javascript %}{% endblock %}

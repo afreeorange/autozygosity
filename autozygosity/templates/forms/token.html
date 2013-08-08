@@ -1,5 +1,5 @@
 <h3>Have a token?</h3>
-<form id="tokencheck" action="/token/check" method="POST" enctype="multipart/form-data">
+<form id="tokencheck" action="{{ url_for('token') }}" method="POST" enctype="multipart/form-data">
 	{{ token_form.csrf_token }}
 	<span id="tokencheck-messages" class="label label-important label-error"></span>
 	<div class="input-append">
@@ -8,6 +8,6 @@
 	</div>
 	{% if session['last_token'] %}
 	<br />
-	<small>Your most recent submission was called &#8220;<a id="last-submission" href="/token/{{ session['last_token'] }}">{{ session['last_token'] }}</a>&#8221;.</small>				
+	<small>Your most recent submission was called &#8220;<a id="last-submission" href="{{ url_for('token_page', token=session['last_token']) }}">{{ session['last_token'] }}</a>&#8221;.</small>
 	{% endif %}
 </form>
