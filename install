@@ -46,11 +46,3 @@ echo -e "settings.py" >> ./.gitignore
 # Generate secret key
 secret_key=$(openssl rand -base64 24)
 echo -e "SECRET_KEY = \"$secret_key\"" >> settings.py
-
-# Get the YUI compressor
-mkdir misc && cd misc
-wget https://github.com/downloads/yui/yuicompressor/yuicompressor-2.4.7.zip --no-check-certificate
-unzip ./yuicompressor-2.4.7.zip
-mv yuicompressor-2.4.7 yui
-rm yuicompressor-2.4.7.zip
-cd ..

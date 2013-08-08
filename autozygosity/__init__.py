@@ -1,12 +1,11 @@
-from sys import exit
 from datetime import datetime
+from sys import exit
 
 from flask import Flask, render_template
-from jinja2 import Environment
 from flask.ext.mongoengine import MongoEngine
-from mongoengine.connection import ConnectionError
-
 from flaskext.uploads import UploadSet, configure_uploads, patch_request_class
+from flask.ext.assets import Environment, Bundle
+from mongoengine.connection import ConnectionError
 
 # Configure Flask app
 app = Flask(__name__)
@@ -31,6 +30,27 @@ from autozygosity import views, models, helpers
 app.jinja_env.globals.update(get_host_url=helpers.jinja_method_get_hostname)
 app.jinja_env.globals.update(explain_submission=helpers.jinja_method_explain_submission)
 app.jinja_env.globals.update(max_upload_size=helpers.jinja_method_max_upload_size)
+
+# Set up assets (including jQuery.js breaks things somehow...)
+assets = Environment(app)
+js = Bundle('js/jquery.ui.min.js', 
+			'js/jquery.form.min.js', 
+			'js/jquery.validate.min.js', 
+			'js/jquery.dataTables.min.js', 
+			'js/bootstrap.min.js', 
+			'js/bootstrap-slider.min.js', 
+			'js/bootstrap-fileupload.min.js',
+			'js/autozygosity.js',
+			filters='jsmin', output='js/packed.js')
+assets.register('autozygosity_js', js)
+
+css = Bundle('css/bootstrap.min.css',
+			 'css/bootstrap-responsive.min.css',
+			 'css/bootstrap-slider.min.css',
+			 'css/bootstrap-fileupload.min.css',
+			 'css/autozygosity.css',
+			filters='cssmin', output='css/packed.css')
+assets.register('autozygosity_css', css)
 
 # Set up routing
 if app.config['APPLICATION_ROOT']:

@@ -1,4 +1,5 @@
 Flask==0.9
+Flask-Assets==0.8
 Flask-Script==0.5.3
 Flask-Uploads==0.1.3
 Flask-WTF==0.8.3
@@ -6,9 +7,12 @@ Jinja2==2.6
 WTForms==1.0.4
 Werkzeug==0.8.3
 argparse==1.2.1
+cssmin==0.1.4
 flask-mongoengine==0.7.0
 gunicorn==0.17.3
+jsmin==2.0.3
 lockfile==0.9.1
 mongoengine==0.8.2
 pymongo==2.5.2
+webassets==0.8
 wsgiref==0.1.2
