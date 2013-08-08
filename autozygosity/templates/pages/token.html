@@ -36,3 +36,27 @@
 	{% endif %}
 	
 {% endblock %}
+
+{% block javascript %}
+$(function () {
+
+	if ($.jStorage.storageAvailable()) {
+
+		older_tokens = $.jStorage.get('older_tokens', []);
+
+		/* Check if token is in local storage */
+		if (jQuery.inArray("{{ submission.token }}", older_tokens) == -1) {
+
+			/* Keep only the specified number of tokens in local storage */
+			if (older_tokens.length == autozygosity.tokens_in_storage) {
+				older_tokens.shift();
+			};
+
+			/* Add the current token */
+			older_tokens.push("{{ submission.token }}");
+			$.jStorage.set('older_tokens', older_tokens);
+		};
+
+	};
+});
+{% endblock %}
