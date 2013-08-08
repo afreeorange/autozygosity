@@ -5,13 +5,13 @@ height: 100%;
 }
 body {
 font-family: "Open Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-background: url("/static/img/back.png") center no-repeat;
+background: url("../img/back.png") center no-repeat;
 }
 h2,h3,h4,h5,h6, big {
 font-family: "Lato", "Helvetica Neue", helvetica, arial, sans-serif;
 }
 small ul li {
-list-style-image: url('/static/img/bullet.png');
+list-style-image: url('../img/bullet.png');
 }
 #masthead {
 font-family: "Montserrat", "Lato", "Helvetica Neue", helvetica, arial, sans-serif;
@@ -68,10 +68,10 @@ margin: 0 15px 0 0;
 display: block;
 width: 75px;
 height: 96px;
-background: url('/static/img/icon-vcf.png') top left no-repeat;
+background: url('../img/icon-vcf.png') top left no-repeat;
 }
 #download-sample:hover {
-background: url('/static/img/icon-vcf.png') -75px 0 no-repeat;
+background: url('../img/icon-vcf.png') -75px 0 no-repeat;
 }
 #download-input,
 #download-results {
@@ -81,23 +81,23 @@ margin: 0 auto;
 width: 108px;
 }
 #download-input {
-background: url('/static/img/icon-results-vcf.png') top left no-repeat;
+background: url('../img/icon-results-vcf.png') top left no-repeat;
 }
 #download-input:hover {
-background: url('/static/img/icon-results-vcf.png') -108px 0 no-repeat;
+background: url('../img/icon-results-vcf.png') -108px 0 no-repeat;
 }
 #download-results {
-background: url('/static/img/icon-results-zip.png') top left no-repeat;
+background: url('../img/icon-results-zip.png') top left no-repeat;
 }
 #download-results:hover {
-background: url('/static/img/icon-results-zip.png') -108px 0 no-repeat;
+background: url('../img/icon-results-zip.png') -108px 0 no-repeat;
 }
 #tokencheck a:hover {
 background-color: #CC0000;
 }
 footer {
 padding: 0 0 25px 50px;
-background: url("/static/img/footer-logo.png") 0 5px no-repeat;
+background: url("../img/footer-logo.png") 0 5px no-repeat;
 }
 .hide {
 display: none;
