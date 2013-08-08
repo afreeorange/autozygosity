@@ -3,7 +3,7 @@ from datetime import datetime
 PROJECT_PATH = "/opt/autozygosity/" # Trailing slash required!
 HOST="127.0.0.1"
 PORT=5000
-DEBUG = False
+DEBUG = True
 
 # Use if you want to host at example.com/autozygosity.
 # If you're on a dedicated subdomain, comment this out entirely.
@@ -36,3 +36,4 @@ STATUS_MAP = dict(zip(JOB_STATUSES, STATUS_CLASSES))
 CSRF_ENABLED = True
 TOKEN_REGEX = r'[a-zA-Z]{5,15}'
 UPLOAD_FORMAT_EXTENSIONS = ['vcf', 'rar', 'zip', 'tar', 'tar.gz', 'tgz', 'gz', 'tar.bz', 'tbz', 'bz']
+UPLOAD_FORMAT_EXTENSIONS_REGEX = "|".join(UPLOAD_FORMAT_EXTENSIONS)

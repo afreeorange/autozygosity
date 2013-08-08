@@ -73,7 +73,16 @@
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-fileupload.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/site.min.js') }}"></script>
+		<script type="text/javascript">
+			var autozygosity = {};
+			{% if config.APPLICATION_ROOT -%}
+			autozygosity.app_root = "{{ config.APPLICATION_ROOT }}";
+			{% else -%}
+			autozygosity.app_root = "";
+			{% endif -%}
+			autozygosity.allowed_extensions = "{{ config.UPLOAD_FORMAT_EXTENSIONS_REGEX }}";
+		</script>
+		<script src="{{ url_for('static', filename='js/site.js') }}"></script>
 		{% if self.javascript() %}
 		<script type="text/javascript">
 			{% block javascript %}{% endblock %}

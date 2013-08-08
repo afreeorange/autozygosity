@@ -2,8 +2,6 @@
 function disable_interaction() {
 	$('button').each(function() {
 		$(this).hide();
-		// URI upload doesn't like this for some reason
-		// $(this).attr('disabled', 'disabled');
 	});
 	$('#navigation > li > a').each(function() {
 		$(this).removeAttr('data-toggle');
@@ -12,14 +10,7 @@ function disable_interaction() {
 
 $(function () {
 
-	// Gets a regex-compatible list of allowed extensions.
-	// Probably overkill.
-	allowed_extensions = ""
-	$.get('/misc/allowed_upload_extensions', function(data) {
-		allowed_extensions = data;
-	});
-
-	// Turns the token submission explanation message off
+	// Turns the token submission explanation message off.
 	// Again, probably overkill. Used jQuery forms for upload
 	// progress. I wanted it to go to the submission target
 	// (/token/{token}), but couldn't make this work. Hence
@@ -27,7 +18,7 @@ $(function () {
 	// a POST and GET in sequence, so using a session helper
 	// wouldn't work.
 	$('#no-token-explanation').click(function(){
-		$.get('/misc/no_explanation');
+		$.get(autozygosity.app_root + '/misc/no_explanation');
 		$('#token-explanation').slideUp();
 	});
 
@@ -39,7 +30,7 @@ $(function () {
 
 	// Check file extension (doesn't mean it's a _valid_ VCF however...)
 	$.validator.addMethod("validextensions", function( value, element ) {
-		var re = new RegExp("^.*.\.(" + allowed_extensions + ")$","i");
+		var re = new RegExp("^.*.\.(" + autozygosity.allowed_extensions + ")$","i");
 		var result = this.optional(element) || re.test(value);
 		return result;
 	}, "You need to upload a raw VCF file or any one of the supported compression formats. File extension is important.");
@@ -176,7 +167,7 @@ $(function () {
 
 				// Anything other than 200 (including a 404) and barf...
 				if (xhr.status != 200) {
-					window.location.href = "/misc/oops";
+					window.location.href = autozygosity.app_root + "/misc/oops";
 					return true;
 				};
 
@@ -184,7 +175,7 @@ $(function () {
 				// because I couldn't figure out how to get the response URI (_not_ responseText)
 				// from the XHR object. Nothing (not even getAllResponseHeaders()) worked.
 				// Could be missing something. This will have to do for now.
-				window.location.href = "/token/" + xhr.getResponseHeader('token');
+				window.location.href = autozygosity.app_root + "/token/" + xhr.getResponseHeader('token');
 			}
 		});
 	});
@@ -203,7 +194,7 @@ $(function () {
 
 	// Sample URI for URI form
 	$('#uri-sample-data').click(function() {
-		$('#uri').val(window.location.origin + '/static/sample.vcf');
+		$('#uri').val(window.location.origin + autozygosity.app_root + '/static/sample.vcf');
 	});
 
 	/*

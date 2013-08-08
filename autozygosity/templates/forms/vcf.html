@@ -1,4 +1,9 @@
+{% if config.APPLICATION_ROOT %}
+<form id="vcfupload" action="{{ config.APPLICATION_ROOT }}" method="POST" enctype="multipart/form-data">
+{% else %}
 <form id="vcfupload" action="/" method="POST" enctype="multipart/form-data">
+{% endif %}
+
 	{{ submission_form.csrf_token }}
 
 	<div class="tab-content">

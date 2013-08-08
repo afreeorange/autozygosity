@@ -26,6 +26,13 @@ def server_error(e = None):
 	return render_template('errors/500.html'), 500
 
 
+@app.route('/misc/no_explanation', methods=['GET'])
+def no_explanation():
+	""" Turn off token explanation on submission page """
+	session['explain_submission'] = False
+	return str(session['explain_submission'])
+
+
 @app.route('/token/<token:token>/log', methods=['GET'])
 @validate_token
 def download_log(token):
@@ -201,20 +208,6 @@ def index():
 			abort(500)
 
 	return render_template("pages/index.html", submission_form=submission_form, token_form=token_form)
-
-
-@app.route('/misc/allowed_upload_extensions')
-def allowed_extensions():
-	""" Returns allowed upload extensions. Used by Javascript. Overkill. """
-	return "|".join(app.config['UPLOAD_FORMAT_EXTENSIONS'])
-
-
-@app.route('/misc/no_explanation', methods=['GET'])
-def no_explanation():
-	""" Turn off token explanation on submission page """
-	session['explain_submission'] = False
-	return str(session['explain_submission'])
-
 
 @app.route('/favicon.ico')
 def favicon():
