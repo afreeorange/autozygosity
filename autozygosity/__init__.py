@@ -32,5 +32,9 @@ app.jinja_env.globals.update(get_host_url=helpers.jinja_method_get_hostname)
 app.jinja_env.globals.update(explain_submission=helpers.jinja_method_explain_submission)
 app.jinja_env.globals.update(max_upload_size=helpers.jinja_method_max_upload_size)
 
-if __name__ == '__main__':
-	app.run()
+# Set up routing
+if app.config['APPLICATION_ROOT']:
+	from werkzeug.wsgi import DispatcherMiddleware
+	routed_app = DispatcherMiddleware(app, {app.config['APPLICATION_ROOT']: app})
+else:
+	routed_app = app

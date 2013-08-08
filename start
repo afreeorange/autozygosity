@@ -5,13 +5,12 @@ import sys
 import logging
 
 from lockfile.pidlockfile import PIDLockFile
-from autozygosity import app
+from werkzeug.serving import run_simple
+from autozygosity import routed_app
 from settings import *
 
 # Run flask or gunicorn depending on options. Default is gunicorn.
 if len(sys.argv) == 2 and sys.argv[1] == "flask":
-    from autozygosity import app
-    app.run(host = HOST, debug = True, port = PORT)
+    run_simple(HOST, PORT, routed_app, use_reloader=True, use_debugger=DEBUG)
 else:
-    os.system("gunicorn --workers 10 --bind " + HOST + ":" + str(PORT) + " autozygosity:app --daemon --access-logfile ./logs/gunicorn.access.log --error-log ./logs/gunicorn.error.log --debug --pid ./daemon.pid --timeout=120 --graceful-timeout=30")
-
+    os.system("gunicorn --workers 10 --bind " + HOST + ":" + str(PORT) + " autozygosity:routed_app --daemon --access-logfile ./logs/gunicorn.access.log --error-log ./logs/gunicorn.error.log --debug --pid ./daemon.pid --timeout=120 --graceful-timeout=30")

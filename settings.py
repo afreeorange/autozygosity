@@ -5,6 +5,10 @@ HOST="127.0.0.1"
 PORT=5000
 DEBUG = False
 
+# Use if you want to host at example.com/autozygosity.
+# If you're on a dedicated subdomain, comment this out entirely.
+APPLICATION_ROOT = "/autozygosity"
+
 PROJECT_NAME = "Homozygosity Mapping"
 MONGODB_SETTINGS = {'DB': "autozygosity", 'PORT': 27017}
 COPYRIGHT_MESSAGE = """
