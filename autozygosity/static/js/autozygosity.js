@@ -10,6 +10,11 @@ function disable_interaction() {
 
 $(function () {
 
+	// Because location.origin seems to be Webkit-only
+	if (!window.location.origin) {
+		window.location.origin = window.location.protocol+"//"+window.location.host;
+	};
+
 	// Show any older tokens if possible and available
 	if ($.jStorage.storageAvailable()) {
 
