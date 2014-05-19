@@ -13,6 +13,19 @@ consideration.
 
 You can run the analysis as a web service or a standalone script.
 
+## Screenshots
+
+[![](http://i.imgur.com/WQ9hzO3b.jpg)](http://i.imgur.com/WQ9hzO3.jpg)
+[![](http://i.imgur.com/n5hq8isb.jpg)](http://i.imgur.com/n5hq8is.jpg)
+[![](http://i.imgur.com/dNhFsWOb.jpg)](http://i.imgur.com/dNhFsWO.jpg)
+[![](http://i.imgur.com/igLsAFrb.jpg)](http://i.imgur.com/igLsAFr.jpg)
+[![](http://i.imgur.com/0eF2ZAsb.jpg)](http://i.imgur.com/0eF2ZAs.jpg)
+[![](http://i.imgur.com/9hKwNIJb.jpg)](http://i.imgur.com/9hKwNIJ.jpg)
+[![](http://i.imgur.com/etsA5D9b.jpg)](http://i.imgur.com/etsA5D9.jpg)
+[![](http://i.imgur.com/xPzRhagb.jpg)](http://i.imgur.com/xPzRhag.jpg)
+[![](http://i.imgur.com/GVPXPg5b.jpg)](http://i.imgur.com/GVPXPg5.jpg)
+[![](http://i.imgur.com/6lKuGWGb.jpg)](http://i.imgur.com/6lKuGWG.jpg)
+
 ## Requirements
 
 ### Web Service
@@ -73,10 +86,6 @@ If you want a Flask server for testing,
 
 Finally, it's highly recommended that you set `DEBUG = False` in `settings.py` 
 and use Nginx as a reverse proxy to Gunicorn. 
-
-## Screenshots
-
-[View at Dropbox][dropbox]
 
 ## To do
 
